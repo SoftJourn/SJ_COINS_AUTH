@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8"/>
+    <title>Login</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+          integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous"/>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+            integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+            crossorigin="anonymous"></script>
+
+</head>
+<body>
+
+<style>
+    div.container {
+        max-width: 600px;
+        margin: auto;
+    }
+
+    .outer {
+        display: table;
+        position: absolute;
+        height: 100%;
+        width: 100%;
+    }
+
+    .middle {
+        display: table-cell;
+        vertical-align: middle;
+    }
+
+    .inner {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    button {
+        width: 100%;
+    }
+
+</style>
+<div class="outer">
+    <div class="middle">
+        <div class="inner">
+            <div class="container">
+                <div th:if="${error == 1}">
+                    <p class="bg-danger">Username or password is incorrect!</p>
+                </div>
+                <form id="login-form" method="post" th:action="@{/login}">
+                    <div class="form-group">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-addon" id="user-label">User</span>
+                            <input name="username" type="text" class="form-control" placeholder=""
+                                   aria-describedby="user-label" required="true"/>
+                        </div>
+                        <br/>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-addon" id="password-label">Password</span>
+                            <input name="password" type="password" class="form-control" placeholder=""
+                                   aria-describedby="password-label" required="true"/>
+                        </div>
+                        <br/>
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
