@@ -1,4 +1,4 @@
-CREATE TABLE oauth_client_details
+CREATE TABLE IF NOT EXISTS oauth_client_details
 (
   client_id VARCHAR(64) PRIMARY KEY NOT NULL,
   resource_ids VARCHAR(256),
@@ -13,7 +13,7 @@ CREATE TABLE oauth_client_details
   autoapprove VARCHAR(256)
 );
 
-CREATE TABLE users
+CREATE TABLE IF NOT EXISTS users
 (
   id       INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
   ldapName VARCHAR(256),
@@ -21,12 +21,7 @@ CREATE TABLE users
   email    VARCHAR(256)
 );
 
-CREATE TABLE hibernate_sequence
-(
-  next_val BIGINT(20)
-);
-
-INSERT INTO sj_auth.oauth_client_details
+INSERT INTO oauth_client_details
 (client_id, resource_ids, client_secret,
  scope, authorized_grant_types, web_server_redirect_uri,
  authorities, access_token_validity, refresh_token_validity,
