@@ -141,9 +141,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <configuration>
-                    <warName>auth</warName>
-                </configuration>
                 <version>2.6</version>
             </plugin>
 
@@ -162,6 +159,14 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <finalName>auth</finalName>
+                </configuration>
             </plugin>
 
 		</plugins>
