@@ -38,8 +38,11 @@ public class LdapAuthoritiesPopulatorBean implements LdapAuthoritiesPopulator {
                 new SJLDAPAuthority("ROLE_ADMIN", "dc=admin,ou=People,ou=Users,dc=ldap,dc=sjua") :
                 new SJLDAPAuthority("ROLE_USER", "dc=user,ou=People,ou=Users,dc=ldap,dc=sjua");
 
-        authority.setFullName(getAttribute(userData, "cn"));
-        authority.setEmail(getAttribute(userData, "mail"));
+        if(userData != null) {
+            authority.setFullName(getAttribute(userData, "cn"));
+            authority.setEmail(getAttribute(userData, "mail"));
+        }
+
         result.add(authority);
 
         return result;

@@ -34,8 +34,12 @@ public class LdapService {
     }
 
     public boolean userExist(String ldapId) {
+        return getUser(ldapId) != null;
+    }
+
+    public User getUser(String ldapId) {
         List<User> result = ldapTemplate.search(ldapUsersBase, "(uid=" + ldapId + ")", new UserAttributesMapper());
-        return ! result.isEmpty();
+        return result.stream().findFirst().orElse(null);
     }
 
     private User getSuperAdminUser() {
