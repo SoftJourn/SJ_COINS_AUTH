@@ -1,5 +1,6 @@
 package com.softjourn.coin.auth.controller;
 
+import com.softjourn.coin.auth.entity.User;
 import com.softjourn.coin.auth.ldap.LdapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,8 +15,8 @@ public class ApiController {
     @Autowired
     private LdapService ldapService;
 
-    @RequestMapping(value = "/{ldapId}/exist", method = RequestMethod.GET)
-    public boolean userExist(@PathVariable final String ldapId) {
-        return ldapService.userExist(ldapId);
+    @RequestMapping(value = "/{ldapId}", method = RequestMethod.GET)
+    public User userExist(@PathVariable final String ldapId) {
+        return ldapService.getUser(ldapId);
     }
 }
