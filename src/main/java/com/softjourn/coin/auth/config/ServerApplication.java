@@ -14,10 +14,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configurers.GlobalAuthenticationConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -58,20 +56,6 @@ public class ServerApplication extends SpringBootServletInitializer {
     }
 
     @Configuration
-    public static class AuthManagerConfig extends GlobalAuthenticationConfigurerAdapter {
-
-        @Autowired
-        private UserDetailsService userDetailsService;
-
-        @Override
-        public void init(AuthenticationManagerBuilder auth) throws Exception {
-            auth.userDetailsService(userDetailsService);
-            super.init(auth);
-        }
-
-    }
-
-    @Configuration
     @EnableAuthorizationServer
     public static class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
@@ -87,6 +71,9 @@ public class ServerApplication extends SpringBootServletInitializer {
         @Autowired
         private DataSource dataSource;
 
+        @Autowired
+        private UserDetailsService userDetailsService;
+
         public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
 
         }
@@ -101,7 +88,8 @@ public class ServerApplication extends SpringBootServletInitializer {
             endpoints
                     .authenticationManager(authenticationProvider::authenticate)
                     .accessTokenConverter(jwtAccessTokenConverter)
-                    .tokenStore(tokenStore);
+                    .tokenStore(tokenStore)
+                    .userDetailsService(userDetailsService);
         }
 
         @Bean
