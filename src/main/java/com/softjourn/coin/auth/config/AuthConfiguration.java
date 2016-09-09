@@ -4,14 +4,11 @@ package com.softjourn.coin.auth.config;
 import com.softjourn.coin.auth.ldap.LdapAuthoritiesPopulatorBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
-import org.springframework.boot.orm.jpa.EntityScan;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -32,29 +29,12 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.sql.DataSource;
 import java.security.KeyPair;
 
 @Configuration
-@EnableWebMvc
-@EnableAutoConfiguration
-@ComponentScan(basePackages = "com.softjourn.coin.auth")
-@EnableJpaRepositories("com.softjourn.coin.auth.repository")
-@EntityScan(basePackages = "com.softjourn.coin.auth.entity")
-@Import({LdapConfiguration.class})
-@SpringBootApplication
-@PropertySources({
-        @PropertySource("classpath:security.properties")
-})
-
-public class ServerApplication extends SpringBootServletInitializer {
-
-    public static void main(String[] args) {
-        SpringApplication.run(ServerApplication.class, args);
-    }
-
+public class AuthConfiguration extends SpringBootServletInitializer {
     @Configuration
     @EnableAuthorizationServer
     public static class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
