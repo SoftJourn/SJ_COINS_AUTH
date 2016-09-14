@@ -60,7 +60,7 @@ that describes the problem. The error object has the following structure:
 
 [[implicit-token]]
 === Getting token implicit flow
-A `GET` request will redirect you browser or WebView in mobile app to redirect address with access_token as url part after # sign.
+A `GET` request will redirect user to auth server login page. When user will login it redirects you browser or WebView in mobile app to redirect address with access_token as url part after # sign.
 You can get this value and use as access token. This flow doesn't provide refresh token.
 About implicit flow in https://tools.ietf.org/id/draft-ietf-oauth-v2-31.html#rfc.section.4.2[official documentation].
 
@@ -75,7 +75,7 @@ include::{snippets}/access_token_implicit_flow/http-response.adoc[]
 
 [[auth-code]]
 === Getting code authorization flow
-A `GET` request will redirect  you browser or WebView in mobile app to redirect address with code as url parameter.
+A `GET` request will redirect user to auth server login page. When user will login it redirects you browser or WebView in mobile app to redirect address with code as url parameter.
 This code should be posted to <<auth-code-token, Authorization flow token endpoint>>
 
 About authorization flow in https://tools.ietf.org/id/draft-ietf-oauth-v2-31.html#rfc.section.4.1[official documentation].
@@ -109,7 +109,7 @@ include::{snippets}/access_token_authorization_code/http-response.adoc[]
 [[password-flow]]
 === Getting token password flow
 Password flow has weakest security and should be used for trusted clients.
-About password flow in https://tools.ietf.org/id/draft-ietf-oauth-v2-31.html#rfc.section.4.2[official documentation].
+About password flow in https://tools.ietf.org/id/draft-ietf-oauth-v2-31.html#rfc.section.4.3[official documentation].
 
 A `POST` request will get access token, refresh token and other related info
 

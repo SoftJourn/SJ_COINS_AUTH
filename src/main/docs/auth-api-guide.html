@@ -563,7 +563,7 @@ that describes the problem. The error object has the following structure:</p>
 <div class="sect2">
 <h3 id="implicit-token"><a class="link" href="#implicit-token">Getting token implicit flow</a></h3>
 <div class="paragraph">
-<p>A <code>GET</code> request will redirect you browser or WebView in mobile app to redirect address with access_token as url part after # sign.
+<p>A <code>GET</code> request will redirect user to auth server login page. When user will login it redirects you browser or WebView in mobile app to redirect address with access_token as url part after # sign.
 You can get this value and use as access token. This flow doesn&#8217;t provide refresh token.
 About implicit flow in <a href="https://tools.ietf.org/id/draft-ietf-oauth-v2-31.html#rfc.section.4.2">official documentation</a>.</p>
 </div>
@@ -582,7 +582,7 @@ Host: localhost</code></pre>
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 302 Found
 Cache-Control: no-store
-Location: client.redirect.uri#access_token=bbce9638-3a10-469d-a3a4-757473656699&amp;token_type=bearer&amp;expires_in=43199</code></pre>
+Location: client.redirect.uri#access_token=fb6fe888-8c67-4dda-9d8e-3ce58bbfbbe0&amp;token_type=bearer&amp;expires_in=43199</code></pre>
 </div>
 </div>
 </div>
@@ -590,7 +590,7 @@ Location: client.redirect.uri#access_token=bbce9638-3a10-469d-a3a4-757473656699&
 <div class="sect2">
 <h3 id="auth-code"><a class="link" href="#auth-code">Getting code authorization flow</a></h3>
 <div class="paragraph">
-<p>A <code>GET</code> request will redirect  you browser or WebView in mobile app to redirect address with code as url parameter.
+<p>A <code>GET</code> request will redirect user to auth server login page. When user will login it redirects you browser or WebView in mobile app to redirect address with code as url parameter.
 This code should be posted to <a href="#auth-code-token">Authorization flow token endpoint</a></p>
 </div>
 <div class="paragraph">
@@ -611,7 +611,7 @@ Host: localhost</code></pre>
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 302 Found
 Cache-Control: no-store
-Location: client.redirect.uri?code=FJEjeV</code></pre>
+Location: client.redirect.uri?code=lqgSDa</code></pre>
 </div>
 </div>
 </div>
@@ -692,7 +692,7 @@ Content-Length: 160
   "access_token" : "accessToken",
   "token_type" : "bearer",
   "refresh_token" : "RefreshTokenValue",
-  "expires_in" : -1473862401,
+  "expires_in" : -1473868134,
   "scope" : "read write"
 }</code></pre>
 </div>
@@ -703,7 +703,7 @@ Content-Length: 160
 <h3 id="password-flow"><a class="link" href="#password-flow">Getting token password flow</a></h3>
 <div class="paragraph">
 <p>Password flow has weakest security and should be used for trusted clients.
-About password flow in <a href="https://tools.ietf.org/id/draft-ietf-oauth-v2-31.html#rfc.section.4.2">official documentation</a>.</p>
+About password flow in <a href="https://tools.ietf.org/id/draft-ietf-oauth-v2-31.html#rfc.section.4.3">official documentation</a>.</p>
 </div>
 <div class="paragraph">
 <p>A <code>POST</code> request will get access token, refresh token and other related info</p>
@@ -753,7 +753,7 @@ Content-Length: 160
   "access_token" : "accessToken",
   "token_type" : "bearer",
   "refresh_token" : "RefreshTokenValue",
-  "expires_in" : -1473862401,
+  "expires_in" : -1473868134,
   "scope" : "read write"
 }</code></pre>
 </div>
@@ -853,7 +853,7 @@ Content-Length: 160
   "access_token" : "accessToken",
   "token_type" : "bearer",
   "refresh_token" : "RefreshTokenValue",
-  "expires_in" : -1473862401,
+  "expires_in" : -1473868134,
   "scope" : "read write"
 }</code></pre>
 </div>
@@ -933,7 +933,7 @@ token_value=%7BrefreshTokenValue%7D</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-09-14 17:29:53 EEST
+Last updated 2016-09-14 18:55:38 EEST
 </div>
 </div>
 </body>

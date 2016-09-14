@@ -80,10 +80,6 @@ public class RevocableJwtTokenStore implements TokenStore {
         cleanUp();
     }
 
-    public static void main(String[] args) {
-        System.out.println(ZoneId.systemDefault().getRules().getOffset(Instant.now()));
-    }
-
     private void cleanUp() {
         if(counter.incrementAndGet() > DEFAULT_CLEAN_UP_INTERVAL) {
             counter.set(0);
