@@ -49,6 +49,8 @@ public class RevocableJwtTokenStoreTest {
     @InjectMocks
     RevocableJwtTokenStore tokenStore;
 
+    OAuth2Authentication auth2Authentication;
+
     Map<String, Instant> tokensMap = new HashMap<String, Instant>() {{
         put(TOKEN_VALUE, Instant.ofEpochSecond(1_000_000));
     }};
@@ -79,14 +81,14 @@ public class RevocableJwtTokenStoreTest {
         when(jwtTokenStore.readRefreshToken(NEW_TOKEN_VALUE)).thenReturn(newToken);
 
         when(token.getValue()).thenReturn(TOKEN_VALUE);
+        when(token.getExpiration()).thenReturn(Date.from(Instant.ofEpochSecond(1_000_000)));
 
+        auth2Authentication = mock(OAuth2Authentication.class);
 
     }
 
     @Test
     public void storeTokenTest() {
-
-        OAuth2Authentication auth2Authentication = mock(OAuth2Authentication.class);
 
         assertNull(tokenStore.readRefreshToken(NEW_TOKEN_VALUE));
 
@@ -115,6 +117,15 @@ public class RevocableJwtTokenStoreTest {
         tokenStore.removeRefreshToken(token);
 
         assertNull(tokenStore.readRefreshToken(TOKEN_VALUE));
+    }
+
+    @Test
+    public void testCleanUp() {
+        for (int i = 0; i < 205; i++) {
+            tokenStore.storeRefreshToken(token, auth2Authentication);
+        }
+
+        verify(repository, atLeast(2)).deleteExpired();
     }
 
 
