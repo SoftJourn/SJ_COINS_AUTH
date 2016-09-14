@@ -8,3 +8,4 @@ target/
 
 # Logs
 *.log
+/src/test/sh/init.sh

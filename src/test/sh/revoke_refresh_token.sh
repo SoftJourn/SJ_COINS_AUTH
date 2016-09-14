@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 source ./init.sh
 
 #### ADDITIONAL INFO ######
@@ -19,3 +20,8 @@ tokens=(`curl --silent -i -k -G -X POST \
 
 echo "ACCESS_TOKEN: "${tokens[0]}
 echo "REFRESH_TOKEN: "${tokens[1]}
+
+curl --silent -i -k -X  POST \
+  https://localhost:8111/oauth/token/revoke \
+  -d "token_value="${tokens[1]}
+

@@ -1,0 +1,174 @@
+= Auth server API Guide
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+[[overview]]
+= Overview
+
+[[overview-http-verbs]]
+== HTTP verbs
+
+RESTful notes tries to adhere as closely as possible to standard HTTP and REST conventions in its
+use of HTTP verbs.
+
+|===
+| Verb | Usage
+
+| `GET`
+| Used to retrieve a resource
+
+| `POST`
+| Used to create a new resource or update an existing resource, including partial updates
+
+| `DELETE`
+| Used to delete an existing resource
+|===
+
+[[overview-http-status-codes]]
+== HTTP status codes
+
+RESTful notes tries to adhere as closely as possible to standard HTTP and REST conventions in its
+use of HTTP status codes.
+
+|===
+| Status code | Usage
+
+| `200 OK`
+| The request completed successfully
+
+| `400 Bad Request`
+| The request was malformed. The response body will include an error providing further information
+
+| `404 Not Found`
+| The requested resource did not exist
+
+|===
+
+[[overview-errors]]
+== Errors
+
+Whenever an error response (status code >= 400) is returned, the body will contain a JSON object
+that describes the problem. The error object has the following structure:
+
+
+[[resources]]
+== Endpoints
+
+[[implicit-token]]
+=== Getting token implicit flow
+A `GET` request will redirect you browser or WebView in mobile app to redirect address with access_token as url part after # sign.
+You can get this value and use as access token. This flow doesn't provide refresh token.
+About implicit flow in https://tools.ietf.org/id/draft-ietf-oauth-v2-31.html#rfc.section.4.2[official documentation].
+
+==== Example request
+
+include::{snippets}/access_token_implicit_flow/http-request.adoc[]
+
+==== Example response
+
+include::{snippets}/access_token_implicit_flow/http-response.adoc[]
+
+
+[[auth-code]]
+=== Getting code authorization flow
+A `GET` request will redirect  you browser or WebView in mobile app to redirect address with code as url parameter.
+This code should be posted to <<auth-code-token, Authorization flow token endpoint>>
+
+About authorization flow in https://tools.ietf.org/id/draft-ietf-oauth-v2-31.html#rfc.section.4.1[official documentation].
+
+
+==== Example request
+
+include::{snippets}/access_token_auth_flow/http-request.adoc[]
+
+==== Example response
+
+include::{snippets}/access_token_auth_flow/http-response.adoc[]
+
+[[auth-code-token]]
+=== Getting token authorization flow
+A `POST` request with code will return access token, refresh token and other related info
+
+==== Response structure
+
+include::{snippets}/access_token_authorization_code/response-fields.adoc[]
+
+==== Example request
+
+include::{snippets}/access_token_authorization_code/http-request.adoc[]
+
+==== Example response
+
+include::{snippets}/access_token_authorization_code/http-response.adoc[]
+
+
+[[password-flow]]
+=== Getting token password flow
+Password flow has weakest security and should be used for trusted clients.
+About password flow in https://tools.ietf.org/id/draft-ietf-oauth-v2-31.html#rfc.section.4.2[official documentation].
+
+A `POST` request will get access token, refresh token and other related info
+
+==== Example request
+
+[NOTE]
+====
+Don't forget to add authorization headers to the request
+Client secret is confidential info (as you can understand from name) so should not be available for third party.
+
+"Authorization: Basic [client_id=client_secret(encoded in base64)]"
+====
+
+include::{snippets}/access_token/http-request.adoc[]
+
+==== Example response
+
+include::{snippets}/access_token/http-response.adoc[]
+
+==== Response structure
+
+include::{snippets}/access_token/response-fields.adoc[]
+
+[[refresh-token]]
+=== Refresh access token
+
+A `POST` request will get new access token for refresh token
+
+==== Example request
+[NOTE]
+====
+Don't forget to add authorization headers to the request
+Client secret is confidential info (as you can understand from name) so should not be available for third party.
+
+"Authorization: Basic [client_id=client_secret(encoded in base64)]"
+====
+
+include::{snippets}/refresh_access_token/http-request.adoc[]
+
+
+==== Example response
+
+include::{snippets}/refresh_access_token/http-response.adoc[]
+
+
+
+==== Response structure
+
+include::{snippets}/refresh_access_token/response-fields.adoc[]
+
+
+[[revoke-token]]
+=== Revoke refresh token
+
+A `POST` request will revoke refresh token so it can't be used in future.
+Should be used for logout purposes or when refresh token was compromised (became available to third parties).
+
+include::{snippets}/revoke_refresh_token/http-request.adoc[]
+
+==== Example response
+
+include::{snippets}/revoke_refresh_token/http-response.adoc[]
