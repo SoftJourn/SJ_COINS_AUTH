@@ -21,11 +21,15 @@ public class LdapService {
     @Value("${ldapUsersBase}")
     private String ldapUsersBase;
 
-    @Autowired
     private LdapTemplate ldapTemplate;
 
-    @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    public LdapService(LdapTemplate ldapTemplate, UserRepository userRepository) {
+        this.ldapTemplate = ldapTemplate;
+        this.userRepository = userRepository;
+    }
 
     public List<User> getAllUsers() {
         List<User> result = ldapTemplate.search(ldapUsersBase, "(&(mail=*)(objectClass=person))", new UserAttributesMapper());

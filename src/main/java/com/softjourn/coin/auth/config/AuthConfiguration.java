@@ -2,12 +2,12 @@ package com.softjourn.coin.auth.config;
 
 
 import com.softjourn.coin.auth.ldap.LdapAuthoritiesPopulatorBean;
+import com.softjourn.coin.auth.repository.TokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
@@ -24,6 +24,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
@@ -54,6 +55,9 @@ public class AuthConfiguration extends SpringBootServletInitializer {
         @Autowired
         private UserDetailsService userDetailsService;
 
+        @Autowired
+        private ClientDetailsService clientDetailsService;
+
         public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
 
         }
@@ -73,8 +77,9 @@ public class AuthConfiguration extends SpringBootServletInitializer {
         }
 
         @Bean
-        public TokenStore tokenStore() {
-            return new JwtTokenStore(jwtAccessTokenConverter);
+        @Autowired
+        public TokenStore tokenStore(TokenRepository tokenRepository, JwtAccessTokenConverter jwtAccessTokenConverter) {
+            return new RevocableJwtTokenStore(new JwtTokenStore(jwtAccessTokenConverter), tokenRepository);
         }
 
         @Bean
@@ -91,7 +96,6 @@ public class AuthConfiguration extends SpringBootServletInitializer {
         }
 
         @Bean
-        @Primary
         public DefaultTokenServices tokenServices() {
             DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
             defaultTokenServices.setTokenStore(tokenStore);
@@ -139,7 +143,7 @@ public class AuthConfiguration extends SpringBootServletInitializer {
         protected void configure(HttpSecurity http) throws Exception {
             http
                     .authorizeRequests()
-                    .antMatchers("/login").permitAll()
+                    .antMatchers("/oauth/token/revoke").permitAll()
                     .antMatchers("/api/**").permitAll()
                     .antMatchers("/admin/**").hasRole("ADMIN")
                     .anyRequest().authenticated()
@@ -151,6 +155,7 @@ public class AuthConfiguration extends SpringBootServletInitializer {
 
                     .and()
                     .csrf()
+                    .ignoringAntMatchers("/oauth/**")
                     .ignoringAntMatchers("/api/**")
                     .ignoringAntMatchers("/admin/**");
 
