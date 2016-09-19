@@ -69,7 +69,7 @@ public class RevocableJwtTokenStoreTest {
             String t = (String) i.getArguments()[0];
             tokensMap.remove(t);
             return null;
-        }).when(repository).delete(anyString());
+        }).when(repository).deleteByValue(anyString());
 
         doAnswer(i -> {
             Token token = (Token) i.getArguments()[0];

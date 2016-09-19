@@ -1,27 +1,29 @@
 package com.softjourn.coin.auth.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.Instant;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "refresh_tokens")
 public class Token {
 
     @Id
+    @GeneratedValue
+    private Long id;
+
     @Column(name = "value", length = 1024)
     private String tokenValue;
 
     @Column(name = "expiration")
     private Instant expirationTime;
 
+    public Token(String tokenValue, Instant expirationTime) {
+        this.tokenValue = tokenValue;
+        this.expirationTime = expirationTime;
+    }
 }

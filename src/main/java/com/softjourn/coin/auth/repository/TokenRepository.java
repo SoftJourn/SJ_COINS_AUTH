@@ -7,7 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface TokenRepository extends CrudRepository<Token, String> {
+public interface TokenRepository extends CrudRepository<Token, Long> {
 
     @Query("SELECT t.tokenValue FROM Token t WHERE t.expirationTime > CURRENT_TIMESTAMP")
     List<String> getAliveTokens();
@@ -21,4 +21,8 @@ public interface TokenRepository extends CrudRepository<Token, String> {
     @Modifying
     @Query("DELETE FROM Token t WHERE t.expirationTime < CURRENT_TIMESTAMP")
     void deleteExpired();
+
+    @Modifying
+    @Query("DELETE FROM Token t WHERE t.tokenValue = ?1")
+    void deleteByValue(String value);
 }

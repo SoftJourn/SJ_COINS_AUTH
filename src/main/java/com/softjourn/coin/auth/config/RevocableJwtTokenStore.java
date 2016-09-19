@@ -105,7 +105,7 @@ public class RevocableJwtTokenStore implements TokenStore {
     @Override
     @Transactional
     public void removeRefreshToken(OAuth2RefreshToken token) {
-        repository.delete(token.getValue());
+        repository.deleteByValue(token.getValue());
         plainStore.removeRefreshToken(token);
     }
 
