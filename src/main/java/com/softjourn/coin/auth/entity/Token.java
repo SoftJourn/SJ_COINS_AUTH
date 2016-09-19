@@ -13,7 +13,7 @@ import java.time.Instant;
 public class Token {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "value", length = 1024)

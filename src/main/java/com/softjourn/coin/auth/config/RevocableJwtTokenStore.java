@@ -3,12 +3,15 @@ package com.softjourn.coin.auth.config;
 
 import com.softjourn.coin.auth.entity.Token;
 import com.softjourn.coin.auth.repository.TokenRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.common.DefaultExpiringOAuth2RefreshToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.time.Instant;
@@ -20,6 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Token store that is mix of JWT and JDBC token store.
  * It uses JWT tokens but store refresh tokens and so allow to revoke it
  */
+@Component("tokenStore")
 public class RevocableJwtTokenStore implements TokenStore {
 
     private static final int DEFAULT_CLEAN_UP_INTERVAL = 100;
@@ -37,6 +41,12 @@ public class RevocableJwtTokenStore implements TokenStore {
      */
     public RevocableJwtTokenStore(JwtTokenStore plainStore, TokenRepository repository) {
         this.plainStore = plainStore;
+        this.repository = repository;
+    }
+
+    @Autowired
+    public RevocableJwtTokenStore(JwtAccessTokenConverter jwtAccessTokenConverter, TokenRepository repository) {
+        this.plainStore = new JwtTokenStore(jwtAccessTokenConverter);
         this.repository = repository;
     }
 

@@ -8,16 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
 import org.springframework.security.ldap.authentication.BindAuthenticator;
 import org.springframework.security.ldap.authentication.LdapAuthenticationProvider;
 import org.springframework.security.ldap.authentication.LdapAuthenticator;
 import org.springframework.security.ldap.search.FilterBasedLdapUserSearch;
-import org.springframework.security.ldap.userdetails.Person;
 
 import java.util.Collections;
 
@@ -58,6 +57,14 @@ public class LdapConfiguration {
                     ldapAuthoritiesPopulatorBean.getGrantedAuthorities(null, ldapLogin)
             );
         };
+    }
 
+    @Bean
+    @Autowired
+    LdapTemplate ldapTemplate(LdapContextSource ldapContextSource) {
+        LdapTemplate template = new LdapTemplate(ldapContextSource);
+        template.setIgnorePartialResultException(true);
+
+        return template;
     }
 }
