@@ -5,7 +5,6 @@ import com.softjourn.coin.auth.repository.TokenRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.security.oauth2.common.DefaultExpiringOAuth2RefreshToken;
@@ -46,7 +45,6 @@ public class RevocableJwtTokenStoreTest {
     @Mock
     DefaultExpiringOAuth2RefreshToken token;
 
-    @InjectMocks
     RevocableJwtTokenStore tokenStore;
 
     OAuth2Authentication auth2Authentication;
@@ -85,6 +83,8 @@ public class RevocableJwtTokenStoreTest {
 
         auth2Authentication = mock(OAuth2Authentication.class);
 
+
+        tokenStore = new RevocableJwtTokenStore(jwtTokenStore, repository);
     }
 
     @Test
