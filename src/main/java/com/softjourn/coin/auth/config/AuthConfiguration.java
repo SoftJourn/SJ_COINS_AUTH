@@ -112,8 +112,8 @@ public class AuthConfiguration {
                     .authorizeRequests()
                     .antMatchers("/oauth/token/revoke").permitAll()
                     .antMatchers("/api/**").permitAll()
+                    .antMatchers("/admin/**").permitAll()
                     .antMatchers("/login").permitAll()
-                    .antMatchers("/admin/**").hasRole("ADMIN")
                     .anyRequest().authenticated()
 
                     .and()

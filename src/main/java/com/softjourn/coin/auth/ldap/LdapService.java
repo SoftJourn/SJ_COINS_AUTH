@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.Collections;
 import java.util.List;
 
@@ -15,7 +16,10 @@ import java.util.List;
 @Service
 public class LdapService {
 
-    @Value("${superAdminLdapName}")
+    private final String SUPER_ADMIN="ROLE_SUPER_ADMIN";
+    private final String ADMIN="ROLE_ADMIN";
+
+    @Value("${super.admin}")
     private String superAdminLdapName;
 
     @Value("${ldapUsersBase}")
@@ -29,6 +33,19 @@ public class LdapService {
     public LdapService(LdapTemplate ldapTemplate, UserRepository userRepository) {
         this.ldapTemplate = ldapTemplate;
         this.userRepository = userRepository;
+    }
+
+    @PostConstruct
+    private void superUserSetUp(){
+        User superAdmin=getSuperAdminUser();
+        User current=getAdmin(superAdmin.getLdapName());
+        if(!superAdmin.equals(current)) {
+            if(current!=null) {
+                current.setAuthorities(ADMIN);
+                addAsAdmin(current);
+            }
+            addAsAdmin(superAdmin);
+        }
     }
 
     public List<User> getAllUsers() {
@@ -46,11 +63,12 @@ public class LdapService {
         return result.stream().findFirst().orElse(null);
     }
 
-    private User getSuperAdminUser() {
+    public User getSuperAdminUser() {
         List<User> result = ldapTemplate.search(ldapUsersBase, "(uid=" + superAdminLdapName + ")", new UserAttributesMapper());
         if(result.isEmpty())
             throw new IllegalArgumentException("There is no user with name " + superAdminLdapName + " " +
                     "in LDAP database. Set correct LDAP name of superAdmin user.");
+        result.get(0).setAuthorities(SUPER_ADMIN);
         return result.get(0);
     }
 
@@ -63,13 +81,20 @@ public class LdapService {
         admins.add(getSuperAdminUser());
         return admins;
     }
+    public User getAdmin(String LdapId){
+        return userRepository.findOne(LdapId);
+    }
 
     public void addAsAdmin(User user) {
         userRepository.save(user);
     }
 
-    public void deleteFromAdmins(Integer id) {
-        userRepository.delete(id);
+    public void deleteFromAdmins(String ldapId) {
+        if(isAdmin(ldapId)){
+            if(getSuperAdminUser().getLdapName().equals(ldapId))
+                return;
+            userRepository.delete(ldapId);
+        }
     }
 }
 
