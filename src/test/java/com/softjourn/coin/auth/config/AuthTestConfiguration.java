@@ -1,9 +1,11 @@
 package com.softjourn.coin.auth.config;
 
 
+import com.softjourn.coin.auth.entity.User;
 import com.softjourn.coin.auth.ldap.LdapAuthoritiesPopulatorBean;
 import com.softjourn.coin.auth.ldap.LdapService;
 import com.softjourn.coin.auth.repository.TokenRepository;
+import com.softjourn.coin.auth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
@@ -203,11 +205,18 @@ public class AuthTestConfiguration extends SpringBootServletInitializer {
         }
 
         @Bean
+        public UserRepository userRepository(){
+            UserRepository userRepository = mock(UserRepository.class);
+            return userRepository;
+        }
+
+        @Bean
         public LdapService ldapservice() {
             LdapService bean = mock(LdapService.class);
 
             when(bean.isAdmin(anyString())).thenReturn(true);
             when(bean.userExist(anyString())).thenReturn(true);
+            when(bean.getSuperAdminUser()).thenReturn(new User("test","test","test","test"));
 
             return bean;
         }

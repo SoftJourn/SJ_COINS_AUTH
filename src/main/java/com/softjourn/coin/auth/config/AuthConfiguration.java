@@ -145,7 +145,7 @@ public class AuthConfiguration extends SpringBootServletInitializer {
                     .authorizeRequests()
                     .antMatchers("/oauth/token/revoke").permitAll()
                     .antMatchers("/api/**").permitAll()
-                    .antMatchers("/admin/**").hasRole("ADMIN")
+                    .antMatchers("/admin/**").permitAll()
                     .anyRequest().authenticated()
 
                     .and()
