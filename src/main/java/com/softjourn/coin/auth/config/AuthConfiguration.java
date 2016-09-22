@@ -85,6 +85,7 @@ public class AuthConfiguration {
             DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
             defaultTokenServices.setTokenEnhancer(jwtAccessTokenConverter);
             defaultTokenServices.setTokenStore(tokenStore);
+            defaultTokenServices.setReuseRefreshToken(false);
             defaultTokenServices.setSupportRefreshToken(true);
             return defaultTokenServices;
         }
