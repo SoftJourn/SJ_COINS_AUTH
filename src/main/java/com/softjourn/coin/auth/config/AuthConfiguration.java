@@ -62,6 +62,7 @@ public class AuthConfiguration {
             endpoints
                     .authenticationManager(authenticationProvider::authenticate)
                     .tokenStore(tokenStore)
+                    .tokenServices(defaultTokenServices(jwtAccessTokenConverter))
                     .accessTokenConverter(jwtAccessTokenConverter)
                     .userDetailsService(userDetailsService);
         }
@@ -79,8 +80,6 @@ public class AuthConfiguration {
             return converter;
         }
 
-        @Bean
-        @Autowired
         public DefaultTokenServices defaultTokenServices(JwtAccessTokenConverter jwtAccessTokenConverter) {
             DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
             defaultTokenServices.setTokenEnhancer(jwtAccessTokenConverter);
