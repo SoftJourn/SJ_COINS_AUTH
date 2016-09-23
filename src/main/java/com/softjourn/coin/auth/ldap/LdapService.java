@@ -38,14 +38,13 @@ public class LdapService {
     @PostConstruct
     private void superUserSetUp(){
         User superAdmin=getSuperAdminUser();
-        User current=getAdmin(superAdmin.getLdapName());
-        if(!superAdmin.equals(current)) {
-            if(current!=null) {
-                current.setAuthorities(ADMIN);
-                addAsAdmin(current);
+        for(User user:getAdmins()){
+            if(user.getAuthorities().matches(SUPER_ADMIN)){
+                user.setAuthorities(ADMIN);
+                addAsAdmin(user);
             }
-            addAsAdmin(superAdmin);
         }
+        addAsAdmin(superAdmin);
     }
 
     public List<User> getAllUsers() {
@@ -78,7 +77,7 @@ public class LdapService {
 
     public Iterable<User> getAdmins() {
         List<User> admins =  userRepository.getAll();
-        admins.add(getSuperAdminUser());
+        //admins.add(getSuperAdminUser());
         return admins;
     }
     public User getAdmin(String LdapId){

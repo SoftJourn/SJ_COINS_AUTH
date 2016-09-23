@@ -1,6 +1,7 @@
 package com.softjourn.coin.auth.config;
 
 
+import com.fasterxml.jackson.databind.util.ArrayIterator;
 import com.softjourn.coin.auth.entity.User;
 import com.softjourn.coin.auth.ldap.LdapAuthoritiesPopulatorBean;
 import com.softjourn.coin.auth.ldap.LdapService;
@@ -217,7 +218,8 @@ public class AuthTestConfiguration extends SpringBootServletInitializer {
             when(bean.isAdmin(anyString())).thenReturn(true);
             when(bean.userExist(anyString())).thenReturn(true);
             when(bean.getSuperAdminUser()).thenReturn(new User("test","test","test","test"));
-
+            Iterable<User> iterable= new ArrayList<User>(){{add(new User("test1","test1","test1","test1"));}};
+            when(bean.getAdmins()).thenReturn(iterable);
             return bean;
         }
 
