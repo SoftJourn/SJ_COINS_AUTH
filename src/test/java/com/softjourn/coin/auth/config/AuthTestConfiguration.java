@@ -1,10 +1,10 @@
 package com.softjourn.coin.auth.config;
 
 
-import com.fasterxml.jackson.databind.util.ArrayIterator;
 import com.softjourn.coin.auth.entity.User;
 import com.softjourn.coin.auth.ldap.LdapAuthoritiesPopulatorBean;
-import com.softjourn.coin.auth.ldap.LdapService;
+import com.softjourn.coin.auth.service.AdminService;
+import com.softjourn.coin.auth.service.LdapService;
 import com.softjourn.coin.auth.repository.TokenRepository;
 import com.softjourn.coin.auth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,6 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Request;
-import org.springframework.security.oauth2.provider.endpoint.TokenEndpoint;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
@@ -52,7 +51,8 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
 @Configuration
-@ComponentScan(basePackages = "com.softjourn.coin.auth.controller")
+@ComponentScan(basePackages = "com.softjourn.coin.auth.controller"
+        , excludeFilters = @ComponentScan.Filter(type=FilterType.ASSIGNABLE_TYPE,classes = com.softjourn.coin.auth.controller.AdminController.class))
 @PropertySources({
         @PropertySource("classpath:security.properties")
 })
@@ -207,20 +207,12 @@ public class AuthTestConfiguration extends SpringBootServletInitializer {
 
         @Bean
         public UserRepository userRepository(){
-            UserRepository userRepository = mock(UserRepository.class);
-            return userRepository;
+            return mock(UserRepository.class);
         }
 
         @Bean
         public LdapService ldapservice() {
-            LdapService bean = mock(LdapService.class);
-
-            when(bean.isAdmin(anyString())).thenReturn(true);
-            when(bean.userExist(anyString())).thenReturn(true);
-            when(bean.getSuperAdminUser()).thenReturn(new User("test","test","test","test"));
-            Iterable<User> iterable= new ArrayList<User>(){{add(new User("test1","test1","test1","test1"));}};
-            when(bean.getAdmins()).thenReturn(iterable);
-            return bean;
+            return mock(LdapService.class);
         }
 
         @Bean

@@ -3,7 +3,7 @@ package com.softjourn.coin.auth.config;
 
 import com.softjourn.coin.auth.entity.User;
 import com.softjourn.coin.auth.ldap.LdapAuthoritiesPopulatorBean;
-import com.softjourn.coin.auth.ldap.LdapService;
+import com.softjourn.coin.auth.service.LdapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

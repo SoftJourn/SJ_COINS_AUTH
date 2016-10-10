@@ -9,3 +9,6 @@ target/
 # Logs
 *.log
 /src/test/sh/init.sh
+
+# Hibernate cfg
+/hibernate.cfg.xml

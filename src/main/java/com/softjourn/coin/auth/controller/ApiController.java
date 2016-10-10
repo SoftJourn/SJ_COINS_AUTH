@@ -1,7 +1,7 @@
 package com.softjourn.coin.auth.controller;
 
 import com.softjourn.coin.auth.entity.User;
-import com.softjourn.coin.auth.ldap.LdapService;
+import com.softjourn.coin.auth.service.LdapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,6 +1,8 @@
 package com.softjourn.coin.auth.ldap;
 
 
+import com.softjourn.coin.auth.service.AdminService;
+import com.softjourn.coin.auth.service.LdapService;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
@@ -24,11 +26,15 @@ import java.util.List;
 @Component
 public class LdapAuthoritiesPopulatorBean implements LdapAuthoritiesPopulator {
 
-    @Value("${superAdminLdapName}")
-    String superAdminLdapName;
+    @Value("${super.admins}")
+    String[] superAdminLdapName;
+
+    private final AdminService adminService;
 
     @Autowired
-    LdapService ldapService;
+    public LdapAuthoritiesPopulatorBean(AdminService adminService) {
+        this.adminService = adminService;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getGrantedAuthorities(DirContextOperations userData, String username) {
@@ -49,7 +55,7 @@ public class LdapAuthoritiesPopulatorBean implements LdapAuthoritiesPopulator {
     }
 
     private boolean isAdmin(String userName) {
-        return userName.equals(superAdminLdapName) || ldapService.isAdmin(userName);
+        return adminService.isAdmin(userName)||adminService.isSuperAdmin(userName);
     }
 
     private String getAttribute(DirContextOperations userData, String attrName) {
