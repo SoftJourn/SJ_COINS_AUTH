@@ -55,7 +55,7 @@ public class LdapAuthoritiesPopulatorBean implements LdapAuthoritiesPopulator {
     }
 
     private boolean isAdmin(String userName) {
-        return adminService.isAdmin(userName)||adminService.isSuperAdmin(userName);
+        return adminService.isAdmin(userName);
     }
 
     private String getAttribute(DirContextOperations userData, String attrName) {

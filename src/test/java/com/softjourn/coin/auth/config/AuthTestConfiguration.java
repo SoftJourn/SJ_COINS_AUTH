@@ -1,12 +1,10 @@
 package com.softjourn.coin.auth.config;
 
 
-import com.softjourn.coin.auth.entity.User;
 import com.softjourn.coin.auth.ldap.LdapAuthoritiesPopulatorBean;
-import com.softjourn.coin.auth.service.AdminService;
-import com.softjourn.coin.auth.service.LdapService;
 import com.softjourn.coin.auth.repository.TokenRepository;
 import com.softjourn.coin.auth.repository.UserRepository;
+import com.softjourn.coin.auth.service.LdapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
@@ -52,7 +50,7 @@ import static org.mockito.Mockito.*;
 
 @Configuration
 @ComponentScan(basePackages = "com.softjourn.coin.auth.controller"
-        , excludeFilters = @ComponentScan.Filter(type=FilterType.ASSIGNABLE_TYPE,classes = com.softjourn.coin.auth.controller.AdminController.class))
+        , excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = com.softjourn.coin.auth.controller.AdminController.class))
 @PropertySources({
         @PropertySource("classpath:security.properties")
 })
@@ -188,7 +186,7 @@ public class AuthTestConfiguration extends SpringBootServletInitializer {
             Authentication authentication = mock(Authentication.class);
             when(authentication.isAuthenticated()).thenReturn(true);
             when(authentication.getName()).thenReturn("user");
-            when(authentication.getPrincipal()).thenReturn((Principal)() -> "user");
+            when(authentication.getPrincipal()).thenReturn((Principal) () -> "user");
 
             OAuth2Authentication oAuth2Authentication = new OAuth2Authentication(request, authentication);
             when(tokenStore.readAuthenticationForRefreshToken(any())).thenReturn(oAuth2Authentication);
@@ -200,13 +198,13 @@ public class AuthTestConfiguration extends SpringBootServletInitializer {
         public EmbeddedDatabase dataSource() {
             return new EmbeddedDatabaseBuilder()
                     .setType(EmbeddedDatabaseType.HSQL)
-                    .addScript("schema.sql")
-                    .addScript("data.sql")
+                    .addScript("token.controller/schema.sql")
+                    .addScript("token.controller/data.sql")
                     .build();
         }
 
         @Bean
-        public UserRepository userRepository(){
+        public UserRepository userRepository() {
             return mock(UserRepository.class);
         }
 

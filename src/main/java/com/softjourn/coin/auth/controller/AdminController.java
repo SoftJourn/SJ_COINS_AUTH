@@ -2,7 +2,6 @@ package com.softjourn.coin.auth.controller;
 
 
 import com.softjourn.coin.auth.entity.User;
-import com.softjourn.coin.auth.exception.DuplicateEntryException;
 import com.softjourn.coin.auth.exception.NoSuchLdapNameException;
 import com.softjourn.coin.auth.service.AdminService;
 import com.softjourn.coin.auth.service.LdapService;
@@ -34,23 +33,46 @@ public class AdminController {
     @RequestMapping(method = RequestMethod.POST )
     public ResponseEntity<User> addNewAdmin(@RequestBody User user){
 
-        if(adminService.getAdmin(user.getLdapName())==null){
-            User ldapUser=ldapService.getUser(user.getLdapName());
-            if(ldapUser!=null){
-                ldapUser.setAuthorities("ROLE_ADMIN");
-                adminService.addAsAdmin(ldapUser);
+        User ldapUser=ldapService.getUser(user.getLdapName());
+        if(ldapUser!=null){
+            if(user.getAuthorities()==null||user.getAuthorities().isEmpty())
+                throw new IllegalArgumentException();
+            if(adminService.find(user.getLdapName())==null){
+                //Implement restriction of user roles
+                ldapUser.setAuthorities(user.getAuthorities());
+                adminService.add(ldapUser);
                 return new ResponseEntity<>(ldapUser, HttpStatus.OK);
             }else {
-                throw new NoSuchLdapNameException(user);
+                //Update user
+                //Implement restriction of user roles
+                User updatedUser=adminService.find(user.getLdapName());
+                updatedUser.setAuthorities(user.getAuthorities());
+                adminService.updateAdmin(updatedUser);
+                return new ResponseEntity<>(updatedUser, HttpStatus.OK);
             }
 
         }else {
-            throw new DuplicateEntryException(user);
+            throw new NoSuchLdapNameException(user);
+        }
+
+    }
+
+    @RequestMapping(value = "/{name:.+}" ,method = RequestMethod.POST)
+    public ResponseEntity<User> updateAdmin(@RequestBody User user,@PathVariable String name){
+        User updateAdmin=adminService.find(name);
+        if(updateAdmin!=null){
+            if(user.getAuthorities().isEmpty())
+                throw new IllegalArgumentException();
+            updateAdmin.setAuthorities(user.getAuthorities());
+            adminService.updateAdmin(updateAdmin);
+            return new ResponseEntity<>(updateAdmin, HttpStatus.OK);
+        }else {
+            throw new IllegalArgumentException();
         }
     }
 
     @RequestMapping(value = "/{name:.+}" ,method = RequestMethod.DELETE)
     public void removeAdmin(@PathVariable String name){
-        adminService.deleteFromAdmins(name);
+        adminService.delete(name);
     }
 }
