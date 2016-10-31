@@ -107,7 +107,7 @@ public class AdminService {
     private boolean isSuper(User user) {
         try {
             Set<Role> authorities = user.getAuthorities();
-            return authorities.stream().filter(Role::isSuper).count() > 0;
+            return authorities.stream().filter(Role::isSuperRole).count() > 0;
         }catch (Exception e){
             return false;
         }

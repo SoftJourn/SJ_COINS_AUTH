@@ -20,7 +20,7 @@ public class Role {
     @Column(name = "id")
     private String authority;
 
-    boolean isSuper = false;
+    private boolean superRole = false;
 
     public Role (String authority){
         this.authority=authority;

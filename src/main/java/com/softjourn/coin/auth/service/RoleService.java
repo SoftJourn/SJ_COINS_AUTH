@@ -44,20 +44,20 @@ public class RoleService {
     }
 
     public Role add(Role role) {
-        if (role.isSuper()) {
+        if (role.isSuperRole()) {
             throw new IllegalAddException();
         }
         return this.add(role.getAuthority());
     }
 
     private Role addSuperRole(Role role) {
-        if (!role.isSuper())
+        if (!role.isSuperRole())
             throw new IllegalArgumentException();
         return roleRepository.save(role);
     }
 
     public void removeRole(Role role) {
-        if (role.isSuper())
+        if (role.isSuperRole())
             throw new IllegalArgumentException("Role " + role.getAuthority() + " can't be deleted due to it is Super");
         this.removeRole(role.getAuthority());
     }
@@ -67,7 +67,7 @@ public class RoleService {
         if (role == null) {
             throw new IllegalArgumentException("Role " + roleName + " hasn't been found");
         }
-        if (role.isSuper())
+        if (role.isSuperRole())
             throw new IllegalArgumentException("Role " + role.getAuthority() + " can't be deleted due to it is Super");
         roleRepository.delete(role);
     }
