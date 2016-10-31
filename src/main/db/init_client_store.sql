@@ -1,24 +1,24 @@
 CREATE TABLE IF NOT EXISTS oauth_client_details
 (
   client_id VARCHAR(64) PRIMARY KEY NOT NULL,
-  resource_ids VARCHAR(256),
-  client_secret VARCHAR(256),
-  scope VARCHAR(256),
-  authorized_grant_types VARCHAR(256),
-  web_server_redirect_uri VARCHAR(256),
-  authorities VARCHAR(256),
+  resource_ids VARCHAR(255),
+  client_secret VARCHAR(255),
+  scope VARCHAR(255),
+  authorized_grant_types VARCHAR(255),
+  web_server_redirect_uri VARCHAR(255),
+  authorities VARCHAR(255),
   access_token_validity INT(11),
   refresh_token_validity INT(11),
   additional_information VARCHAR(4096),
-  autoapprove VARCHAR(256)
+  autoapprove VARCHAR(255)
 );
 
 CREATE TABLE IF NOT EXISTS users
 (
   id       INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  ldapName VARCHAR(256),
-  fullName VARCHAR(256),
-  email    VARCHAR(256)
+  ldapName VARCHAR(255),
+  fullName VARCHAR(255),
+  email    VARCHAR(255)
 );
 
 INSERT INTO oauth_client_details
