@@ -1,13 +1,12 @@
 package com.softjourn.coin.auth.config;
 
 
-import com.softjourn.coin.auth.ldap.LdapAuthoritiesPopulatorBean;
+import com.softjourn.coin.auth.ldap.LdapAuthoritiesPopulationBean;
 import com.softjourn.coin.auth.repository.TokenRepository;
 import com.softjourn.coin.auth.repository.UserRepository;
 import com.softjourn.coin.auth.service.LdapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
@@ -55,7 +54,7 @@ import static org.mockito.Mockito.*;
         @PropertySource("classpath:security.properties")
 })
 @EnableWebMvc
-public class AuthTestConfiguration extends SpringBootServletInitializer {
+public class AuthTestConfiguration {
     @Configuration
     @EnableAuthorizationServer
     public static class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
@@ -138,8 +137,8 @@ public class AuthTestConfiguration extends SpringBootServletInitializer {
         }
 
         @Bean
-        public LdapAuthoritiesPopulatorBean ldapAuthoritiesPopulatorBean() {
-            LdapAuthoritiesPopulatorBean bean = mock(LdapAuthoritiesPopulatorBean.class);
+        public LdapAuthoritiesPopulationBean ldapAuthoritiesPopulatorBean() {
+            LdapAuthoritiesPopulationBean bean = mock(LdapAuthoritiesPopulationBean.class);
             List<? extends GrantedAuthority> authorities = new ArrayList<GrantedAuthority>() {{
                 add((GrantedAuthority) () -> "ROLE_ADMIN");
                 add((GrantedAuthority) () -> "ROLE_USER");

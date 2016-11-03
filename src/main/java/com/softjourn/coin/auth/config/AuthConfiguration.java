@@ -2,9 +2,11 @@ package com.softjourn.coin.auth.config;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -30,27 +32,33 @@ import java.security.KeyPair;
 
 @Configuration
 public class AuthConfiguration {
+
     @Configuration
     @EnableAuthorizationServer
     public static class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
-        @Autowired
-        private AuthenticationProvider authenticationProvider;
+        private final AuthenticationProvider authenticationProvider;
+
+        private final TokenStore tokenStore;
+
+        private final DataSource dataSource;
+
+        private final UserDetailsService userDetailsService;
+
+        private final JwtAccessTokenConverter jwtAccessTokenConverter;
+
+        private final ClientDetailsService clientDetailsService;
 
         @Autowired
-        private TokenStore tokenStore;
+        public AuthServerConfig(UserDetailsService userDetailsService, DataSource dataSource, ClientDetailsService clientDetailsService, JwtAccessTokenConverter jwtAccessTokenConverter, AuthenticationProvider authenticationProvider, TokenStore tokenStore) {
+            this.userDetailsService = userDetailsService;
+            this.dataSource = dataSource;
+            this.clientDetailsService = clientDetailsService;
+            this.jwtAccessTokenConverter = jwtAccessTokenConverter;
+            this.authenticationProvider = authenticationProvider;
+            this.tokenStore = tokenStore;
+        }
 
-        @Autowired
-        private DataSource dataSource;
-
-        @Autowired
-        private UserDetailsService userDetailsService;
-
-        @Autowired
-        private JwtAccessTokenConverter jwtAccessTokenConverter;
-
-        @Autowired
-        private ClientDetailsService clientDetailsService;
 
         public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
 
@@ -74,9 +82,9 @@ public class AuthConfiguration {
 
         @Bean
         public static JwtAccessTokenConverter jwtAccessTokenConverter(@Value("${authKeyFileName}") String authKeyFileName,
-                                                               @Value("${authKeyStorePass}") String authKeyStorePass,
-                                                               @Value("${authKeyMasterPass}") String authKeyMasterPass,
-                                                               @Value("${authKeyAlias}") String authKeyAlias) {
+                                                                      @Value("${authKeyStorePass}") String authKeyStorePass,
+                                                                      @Value("${authKeyMasterPass}") String authKeyMasterPass,
+                                                                      @Value("${authKeyAlias}") String authKeyAlias) {
             JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
             KeyPair keyPair = new KeyStoreKeyFactory(
                     new ClassPathResource(authKeyFileName), authKeyStorePass.toCharArray())
@@ -85,6 +93,9 @@ public class AuthConfiguration {
             return converter;
         }
 
+        @Bean
+        @Primary
+        @Qualifier(value = "consumerTokenServices")
         public DefaultTokenServices defaultTokenServices(JwtAccessTokenConverter jwtAccessTokenConverter) {
             DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
             defaultTokenServices.setTokenEnhancer(jwtAccessTokenConverter);

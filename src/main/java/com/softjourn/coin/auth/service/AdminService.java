@@ -17,7 +17,6 @@ public class AdminService {
 
     private UserRepository userRepository;
     private LdapService ldapService;
-    private RoleService roleService;
 
     @Autowired
     public AdminService(UserRepository userRepository, LdapService ldapService, RoleService roleService
@@ -25,7 +24,6 @@ public class AdminService {
             , @Value("${super.roles}") String[] superRoles) throws ConfigurationException {
         this.userRepository = userRepository;
         this.ldapService = ldapService;
-        this.roleService = roleService;
         this.init(superAdmins,superRoles);
     }
 

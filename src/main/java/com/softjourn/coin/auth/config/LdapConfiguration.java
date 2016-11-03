@@ -2,7 +2,7 @@ package com.softjourn.coin.auth.config;
 
 
 import com.softjourn.coin.auth.entity.User;
-import com.softjourn.coin.auth.ldap.LdapAuthoritiesPopulatorBean;
+import com.softjourn.coin.auth.ldap.LdapAuthoritiesPopulationBean;
 import com.softjourn.coin.auth.service.LdapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,19 +42,19 @@ public class LdapConfiguration {
 
     @Bean
     @Autowired
-    public AuthenticationProvider authenticationProvider(LdapAuthenticator authenticator, LdapAuthoritiesPopulatorBean ldapAuthoritiesPopulatorBean) {
-        return new LdapAuthenticationProvider(authenticator, ldapAuthoritiesPopulatorBean);
+    public AuthenticationProvider authenticationProvider(LdapAuthenticator authenticator, LdapAuthoritiesPopulationBean ldapAuthoritiesPopulationBean) {
+        return new LdapAuthenticationProvider(authenticator, ldapAuthoritiesPopulationBean);
     }
 
     @Bean
     @Autowired
-    public UserDetailsService userDetailsService(LdapService ldapService, LdapAuthoritiesPopulatorBean ldapAuthoritiesPopulatorBean) {
+    public UserDetailsService userDetailsService(LdapService ldapService, LdapAuthoritiesPopulationBean ldapAuthoritiesPopulationBean) {
         return ldapLogin -> {
             User user = ldapService.getUser(ldapLogin);
             return new org.springframework.security.core.userdetails.User(
                     user.getLdapName(),
                     "[HIDEN]",
-                    ldapAuthoritiesPopulatorBean.getGrantedAuthorities(null, ldapLogin)
+                    ldapAuthoritiesPopulationBean.getGrantedAuthorities(null, ldapLogin)
             );
         };
     }

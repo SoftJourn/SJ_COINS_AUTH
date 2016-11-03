@@ -25,8 +25,6 @@ import static org.junit.Assert.*;
 @ContextConfiguration(classes = {RoleService.class})
 public class RoleServiceTest {
 
-    @Autowired
-    private RoleRepository roleRepository;
 
     @Autowired
     private RoleService roleService;

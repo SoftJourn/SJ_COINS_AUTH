@@ -8,9 +8,6 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
-import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 
 
@@ -23,7 +20,6 @@ public class User {
 
     @Id
     @NotBlank
-    @Column(name = "ldapName")
     private String ldapName;
 
     @NotBlank

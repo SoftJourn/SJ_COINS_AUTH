@@ -3,6 +3,7 @@ package com.softjourn.coin.auth.controller;
 import com.softjourn.coin.auth.entity.User;
 import com.softjourn.coin.auth.service.LdapService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/users")
+@PreAuthorize("authenticated")
 public class ApiController {
 
     private final LdapService ldapService;

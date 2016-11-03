@@ -21,9 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.naming.ConfigurationException;
 import java.util.Collections;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
@@ -32,9 +30,10 @@ import static org.mockito.Mockito.when;
 @ContextConfiguration(classes = {RoleService.class})
 public class AdminServiceTest {
 
-    AdminService adminService;
+    private AdminService adminService;
 
     @Autowired
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     UserRepository userRepository;
 
     @Mock
@@ -116,6 +115,19 @@ public class AdminServiceTest {
         assertEquals(adminService.find(testUser.getLdapName()), testUser);
         adminService.delete(testUser.getLdapName());
         assertNull(adminService.find(testUser.getLdapName()));
+    }
+
+    @Test
+    public void isAdmin_Admin_True() throws Exception {
+        assertEquals(roleService.add(testRole), testRole);
+        assertEquals(adminService.add(testUser), testUser);
+        assertTrue(adminService.isAdmin(testUser.getLdapName()));
+        adminService.delete(testUser.getLdapName());
+    }
+
+    @Test
+    public void isAdmin_NotAdmin_False() throws Exception {
+        adminService.isAdmin("Not Admin");
     }
 
 }
