@@ -18,8 +18,7 @@ import java.io.IOException;
 
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
-@SuppressWarnings("Duplicates")
-public class CustomCORSFilter extends CorsFilter {
+class CustomCorsFilter extends CorsFilter {
     private static UrlBasedCorsConfigurationSource configSource;
 
     static {
@@ -33,7 +32,7 @@ public class CustomCORSFilter extends CorsFilter {
         configSource.registerCorsConfiguration("/**", config);
     }
 
-    CustomCORSFilter() {
+    CustomCorsFilter() {
         super(configSource);
     }
 
