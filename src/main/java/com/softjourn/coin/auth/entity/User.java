@@ -20,20 +20,17 @@ public class User {
 
     @Id
     @NotBlank
-    private String ldapName;
+    private String ldapId;
 
     @NotBlank
     private String fullName;
 
-    @Column
     @NotBlank
     @Email
     private String email;
 
     @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(name="users_role"
-            ,joinColumns = @JoinColumn(name = "ldapName",referencedColumnName = "ldapName")
-            ,inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    @JoinTable(name="users_role", inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> authorities;
 
 }

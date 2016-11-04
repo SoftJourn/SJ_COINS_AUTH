@@ -5,7 +5,7 @@ import com.softjourn.coin.auth.entity.User;
 public class DeletingSuperUserException extends RuntimeException{
 
     public DeletingSuperUserException(User user){
-        super(message(user.getLdapName()));
+        super(message(user.getLdapId()));
     }
 
     private static String  message(String userName){

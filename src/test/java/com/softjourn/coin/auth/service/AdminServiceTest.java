@@ -63,7 +63,7 @@ public class AdminServiceTest {
         when(ldapService.userExist("new_super_user")).thenReturn(true);
 
         //legal test user ldap
-        when(ldapService.userExist(testUser.getLdapName())).thenReturn(true);
+        when(ldapService.userExist(testUser.getLdapId())).thenReturn(true);
 
         //for init super user in application start up
         when(ldapService.getUser(superUsers[0])).thenReturn(new User(superUsers[0], "FULL NAME", "EMAIL@email", null));
@@ -105,24 +105,24 @@ public class AdminServiceTest {
     public void delete_SuperUser_ThrowsException() {
         User superUser = adminService.find(superUsers[0]);
         assertNotNull(superUser);
-        adminService.delete(superUser.getLdapName());
+        adminService.delete(superUser.getLdapId());
     }
 
     @Test
     public void delete_ExistsAdmin_ActualDelete() {
         assertEquals(roleService.add(testRole), testRole);
         assertEquals(adminService.add(testUser), testUser);
-        assertEquals(adminService.find(testUser.getLdapName()), testUser);
-        adminService.delete(testUser.getLdapName());
-        assertNull(adminService.find(testUser.getLdapName()));
+        assertEquals(adminService.find(testUser.getLdapId()), testUser);
+        adminService.delete(testUser.getLdapId());
+        assertNull(adminService.find(testUser.getLdapId()));
     }
 
     @Test
     public void isAdmin_Admin_True() throws Exception {
         assertEquals(roleService.add(testRole), testRole);
         assertEquals(adminService.add(testUser), testUser);
-        assertTrue(adminService.isAdmin(testUser.getLdapName()));
-        adminService.delete(testUser.getLdapName());
+        assertTrue(adminService.isAdmin(testUser.getLdapId()));
+        adminService.delete(testUser.getLdapId());
     }
 
     @Test

@@ -4,7 +4,7 @@ import com.softjourn.coin.auth.entity.User;
 
 public class NoSuchLdapNameException extends RuntimeException{
     public NoSuchLdapNameException(User user) {
-        super(message(user.getLdapName()));
+        super(message(user.getLdapId()));
     }
     private static String  message(String name){
         return "User "+name+" not in LDAP database";

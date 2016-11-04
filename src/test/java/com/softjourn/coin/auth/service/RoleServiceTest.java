@@ -3,7 +3,6 @@ package com.softjourn.coin.auth.service;
 import com.softjourn.coin.auth.config.JPATestConfig;
 import com.softjourn.coin.auth.entity.Role;
 import com.softjourn.coin.auth.exception.IllegalAddException;
-import com.softjourn.coin.auth.repository.RoleRepository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

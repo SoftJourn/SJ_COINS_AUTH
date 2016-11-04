@@ -197,8 +197,8 @@ public class AuthTestConfiguration {
         public EmbeddedDatabase dataSource() {
             return new EmbeddedDatabaseBuilder()
                     .setType(EmbeddedDatabaseType.HSQL)
-                    .addScript("token.controller/schema.sql")
-                    .addScript("token.controller/data.sql")
+                    .addScript("schema.sql")
+                    .addScript("initdata.sql")
                     .build();
         }
 

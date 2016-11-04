@@ -1,4 +1,4 @@
-CREATE TABLE oauth_client_details
+CREATE TABLE IF NOT EXISTS oauth_client_details
 (
   client_id VARCHAR(64) PRIMARY KEY NOT NULL,
   resource_ids VARCHAR(256),
@@ -13,16 +13,17 @@ CREATE TABLE oauth_client_details
   autoapprove VARCHAR(256)
 );
 
-CREATE TABLE users
+CREATE TABLE IF NOT EXISTS users
 (
-  id       INT PRIMARY KEY NOT NULL IDENTITY ,
-  ldapName VARCHAR(256),
-  fullName VARCHAR(256),
-  email    VARCHAR(256)
+  id  INT PRIMARY KEY NOT NULL ,
+  ldap_id VARCHAR(255),
+  full_name VARCHAR(255),
+  email    VARCHAR(255)
 );
 
-CREATE TABLE refresh_tokens
+CREATE TABLE IF NOT EXISTS refresh_tokens
 (
-    value VARCHAR(1024) PRIMARY KEY NOT NULL,
+    id BIGINT  PRIMARY KEY NOT NULL,
+    value VARCHAR(1024),
     expiration DATETIME
 );

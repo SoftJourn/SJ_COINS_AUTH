@@ -95,7 +95,7 @@ public class AdminService {
     }
 
     private boolean isValid(User user) {
-        return ldapService.userExist(user.getLdapName())
+        return ldapService.userExist(user.getLdapId())
                 &&!isSuper(user);
     }
 

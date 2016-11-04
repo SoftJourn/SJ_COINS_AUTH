@@ -35,11 +35,11 @@ public class AdminController {
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<User> addNewAdmin(@RequestBody User user) {
 
-        User ldapUser = ldapService.getUser(user.getLdapName());
+        User ldapUser = ldapService.getUser(user.getLdapId());
         if (ldapUser != null) {
             if (user.getAuthorities() == null || user.getAuthorities().isEmpty())
                 throw new IllegalArgumentException();
-            if (adminService.find(user.getLdapName()) == null) {
+            if (adminService.find(user.getLdapId()) == null) {
                 //Implement restriction of user roles
                 ldapUser.setAuthorities(user.getAuthorities());
                 adminService.add(ldapUser);
@@ -47,7 +47,7 @@ public class AdminController {
             } else {
                 //Update user
                 //Implement restriction of user roles
-                User updatedUser = adminService.find(user.getLdapName());
+                User updatedUser = adminService.find(user.getLdapId());
                 updatedUser.setAuthorities(user.getAuthorities());
                 adminService.updateAdmin(updatedUser);
                 return new ResponseEntity<>(updatedUser, HttpStatus.OK);

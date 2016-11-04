@@ -52,7 +52,7 @@ public class LdapConfiguration {
         return ldapLogin -> {
             User user = ldapService.getUser(ldapLogin);
             return new org.springframework.security.core.userdetails.User(
-                    user.getLdapName(),
+                    user.getLdapId(),
                     "[HIDEN]",
                     ldapAuthoritiesPopulationBean.getGrantedAuthorities(null, ldapLogin)
             );

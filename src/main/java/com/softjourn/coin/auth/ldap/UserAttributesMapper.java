@@ -23,7 +23,7 @@ public class UserAttributesMapper implements AttributesMapper<User> {
         if(email != null) user.setEmail((String) email.get());
 
         Attribute ldapName = attributes.get("uid");
-        if(ldapName != null) user.setLdapName((String) ldapName.get());
+        if(ldapName != null) user.setLdapId((String) ldapName.get());
 
         return user;
     }
