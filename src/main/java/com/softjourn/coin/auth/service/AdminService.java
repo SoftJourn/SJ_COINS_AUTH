@@ -3,6 +3,7 @@ package com.softjourn.coin.auth.service;
 import com.softjourn.coin.auth.entity.Role;
 import com.softjourn.coin.auth.entity.User;
 import com.softjourn.coin.auth.exception.*;
+import com.softjourn.coin.auth.repository.RoleRepository;
 import com.softjourn.coin.auth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,12 +19,14 @@ public class AdminService {
     private UserRepository userRepository;
     private LdapService ldapService;
 
+
     @Autowired
     public AdminService(UserRepository userRepository, LdapService ldapService, RoleService roleService
             , @Value("${super.admins}") String[] superAdmins
             , @Value("${super.roles}") String[] superRoles) throws ConfigurationException {
         this.userRepository = userRepository;
         this.ldapService = ldapService;
+        this.removeSuperUsers(superRoles);
         this.init(superAdmins,superRoles);
     }
 
@@ -35,6 +38,19 @@ public class AdminService {
             throw new ConfigurationException("Please set up proper super.admins and super.roles");
         }
 
+    }
+
+    private void removeSuperUsers(String[] superRoles) throws ConfigurationException {
+        if ( superRoles != null && superRoles.length > 0) {
+            userRepository.delete(this.getSuperAdmins(superRoles[0]));
+        } else {
+            throw new ConfigurationException("Please set up proper super.roles");
+        }
+    }
+
+    private List<User> getSuperAdmins(String superRole) {
+        Role role = new Role(superRole,true);
+        return userRepository.findByAuthorities(role);
     }
 
     private User addSuperUser(String ldapName,String[] superRoles) {
