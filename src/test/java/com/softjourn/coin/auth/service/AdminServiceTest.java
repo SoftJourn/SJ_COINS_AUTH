@@ -4,6 +4,7 @@ import com.softjourn.coin.auth.config.AuthTestConfiguration;
 import com.softjourn.coin.auth.entity.Role;
 import com.softjourn.coin.auth.entity.User;
 import com.softjourn.coin.auth.exception.DeletingSuperUserException;
+import com.softjourn.coin.auth.exception.DuplicateEntryException;
 import com.softjourn.coin.auth.exception.IllegalAddException;
 import com.softjourn.coin.auth.exception.NotValidRoleException;
 import com.softjourn.coin.auth.repository.UserRepository;
@@ -30,40 +31,39 @@ import static org.mockito.Mockito.when;
 @ContextConfiguration(classes = {RoleService.class})
 public class AdminServiceTest {
 
-    private AdminService adminService;
-
+    private final Role testRole = new Role("ROLE_TEST");
+    private final User testUser = new User("ldap_test", "full_name", "email@email", Collections.singleton(testRole));
     @Autowired
     @SuppressWarnings("SpringJavaAutowiringInspection")
     UserRepository userRepository;
-
     @Mock
     LdapService ldapService;
-
     @Autowired
     RoleService roleService;
-
-    @Value("${super.admins}")
-    private String[] superUsers;
-
     @Value("${super.roles}")
     String[] superRoles;
-
-
-    private final Role testRole = new Role("ROLE_TEST");
-    private final User testUser = new User("ldap_test", "full_name", "email@email", Collections.singleton(testRole));
-
+    private AdminService adminService;
+    @Value("${super.admins}")
+    private String[] superUsers;
     private User testSuperUser;
     private User illegalUser;
 
 
     @Before
     public void setUp() throws ConfigurationException {
+
+        // set up roles
+        this.roleService.add(testRole);
+
         // set up for illegal super user
         this.testSuperUser = new User("new_super_user", "full_name", "email@email", Collections.singleton(new Role(superRoles[0], true)));
         when(ldapService.userExist("new_super_user")).thenReturn(true);
 
         //legal test user ldap
         when(ldapService.userExist(testUser.getLdapId())).thenReturn(true);
+        //legal test users in ldap
+        when(ldapService.userExist(testUser.getLdapId())).thenReturn(true);
+        when(ldapService.userExist("ldap_test_valid")).thenReturn(true);
 
         //for init super user in application start up
         when(ldapService.getUser(superUsers[0])).thenReturn(new User(superUsers[0], "FULL NAME", "EMAIL@email", null));
@@ -72,18 +72,22 @@ public class AdminServiceTest {
         this.illegalUser = new User("illegal_user", "full_name", "email@email", null);
 
         //Injected Mock set up
-        adminService = new AdminService(userRepository, ldapService, roleService, superUsers, superRoles);
+        adminService = new AdminService(userRepository, ldapService, superUsers, superRoles);
     }
 
     @Test(expected = NotValidRoleException.class)
-    public void add_NotValidRole_ThrowsException() {
-        adminService.add(testUser);
+    public void add_ValidUserWithNotValidRole_ThrowsException() {
+        Role notValidRole = new Role("ROLE_NOT_VALID");
+        User notValidUser = new User("ldap_test_valid", "full_name", "email@email"
+                , Collections.singleton(notValidRole));
+        adminService.add(notValidUser);
     }
 
     @Test
     public void add_RoleValid_Arg() {
         assertEquals(roleService.add(testRole), testRole);
         assertEquals(adminService.add(testUser), testUser);
+        adminService.delete(testUser);
     }
 
     @Test(expected = IllegalAddException.class)
@@ -94,6 +98,17 @@ public class AdminServiceTest {
     @Test(expected = IllegalAddException.class)
     public void add_UserThatIsNotExistsInLDAP_ThrowsException() throws Exception {
         adminService.add(illegalUser);
+    }
+
+    @Test(expected = DuplicateEntryException.class)
+    public void add_DuplicateUser_ThrowsException() throws Exception {
+        try {
+            adminService.add(testUser);
+            adminService.add(testUser);
+        } finally {
+            adminService.delete(testUser);
+        }
+
     }
 
     @Test

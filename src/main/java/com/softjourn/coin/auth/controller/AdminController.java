@@ -2,6 +2,7 @@ package com.softjourn.coin.auth.controller;
 
 
 import com.softjourn.coin.auth.entity.User;
+import com.softjourn.coin.auth.exception.DuplicateEntryException;
 import com.softjourn.coin.auth.exception.NoSuchLdapNameException;
 import com.softjourn.coin.auth.service.AdminService;
 import com.softjourn.coin.auth.service.LdapService;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/admin")
-//@PreAuthorize("hasAnyRole('SUPER_ADMIN','USER_MANAGER')")
+@PreAuthorize("hasAnyRole('SUPER_ADMIN','USER_MANAGER')")
 public class AdminController {
 
     private final AdminService adminService;
@@ -45,12 +46,7 @@ public class AdminController {
                 adminService.add(ldapUser);
                 return new ResponseEntity<>(ldapUser, HttpStatus.OK);
             } else {
-                //Update user
-                //Implement restriction of user roles
-                User updatedUser = adminService.find(user.getLdapId());
-                updatedUser.setAuthorities(user.getAuthorities());
-                adminService.updateAdmin(updatedUser);
-                return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+                throw new DuplicateEntryException(user);
             }
 
         } else {

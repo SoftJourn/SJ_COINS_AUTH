@@ -3,7 +3,6 @@ package com.softjourn.coin.auth.service;
 import com.softjourn.coin.auth.entity.Role;
 import com.softjourn.coin.auth.entity.User;
 import com.softjourn.coin.auth.exception.*;
-import com.softjourn.coin.auth.repository.RoleRepository;
 import com.softjourn.coin.auth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,7 +10,10 @@ import org.springframework.stereotype.Service;
 
 import javax.naming.ConfigurationException;
 import javax.persistence.EntityNotFoundException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 public class AdminService {
@@ -21,7 +23,7 @@ public class AdminService {
 
 
     @Autowired
-    public AdminService(UserRepository userRepository, LdapService ldapService, RoleService roleService
+    public AdminService(UserRepository userRepository, LdapService ldapService
             , @Value("${super.admins}") String[] superAdmins
             , @Value("${super.roles}") String[] superRoles) throws ConfigurationException {
         this.userRepository = userRepository;
@@ -69,7 +71,7 @@ public class AdminService {
 
     }
 
-    public boolean isAdmin(String login) {
+    boolean isAdmin(String login) {
         return userRepository.exists(login);
     }
 
@@ -83,8 +85,12 @@ public class AdminService {
 
     public User add(User user) {
         try {
-            if(isValid(user))
-                return userRepository.save(user);
+            if (isValid(user)) {
+                if (isAdmin(user))
+                    throw new DuplicateEntryException(user);
+                else
+                    return userRepository.save(user);
+            }
             else
                 throw new IllegalAddException();
         } catch (RuntimeException e) {
@@ -92,6 +98,10 @@ public class AdminService {
                 throw new NotValidRoleException(user);
             throw e;
         }
+    }
+
+    private boolean isAdmin(User user) {
+        return isAdmin(user.getLdapId());
     }
 
     private boolean isValid(User user) {
@@ -130,5 +140,9 @@ public class AdminService {
 
     public void updateAdmin(User updatedUser) {
         userRepository.save(updatedUser);
+    }
+
+    void delete(User testUser) {
+        this.delete(testUser.getLdapId());
     }
 }
