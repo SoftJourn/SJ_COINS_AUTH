@@ -1,5 +1,6 @@
 package com.softjourn.coin.auth.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
+@Slf4j
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 class CustomCorsFilter extends CorsFilter {
@@ -41,6 +43,11 @@ class CustomCorsFilter extends CorsFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
+
+        log.info("****************** InFO**********************");
+        log.info(request.getPathInfo());
+        log.info(request.getMethod());
+
         if (CorsUtils.isPreFlightRequest(request)) {
             response.setStatus(HttpStatus.OK.value());
         }
