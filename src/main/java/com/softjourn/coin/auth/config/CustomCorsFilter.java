@@ -44,10 +44,6 @@ class CustomCorsFilter extends CorsFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
-        log.info("****************** InFO**********************");
-        log.info(request.getPathInfo());
-        log.info(request.getMethod());
-
         if (CorsUtils.isPreFlightRequest(request)) {
             response.setStatus(HttpStatus.OK.value());
         }
