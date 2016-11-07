@@ -7,12 +7,11 @@ import com.softjourn.coin.auth.repository.UserRepository;
 import com.softjourn.coin.auth.service.LdapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -53,6 +52,8 @@ import static org.mockito.Mockito.*;
 @PropertySources({
         @PropertySource("classpath:security.properties")
 })
+@EnableJpaRepositories(basePackages = "com.softjourn.coin.auth.repository")
+@EntityScan(basePackages = "com.softjourn.coin.auth.entity")
 @EnableWebMvc
 public class AuthTestConfiguration {
     @Configuration
@@ -191,15 +192,6 @@ public class AuthTestConfiguration {
             when(tokenStore.readAuthenticationForRefreshToken(any())).thenReturn(oAuth2Authentication);
 
             return tokenStore;
-        }
-
-        @Bean
-        public EmbeddedDatabase dataSource() {
-            return new EmbeddedDatabaseBuilder()
-                    .setType(EmbeddedDatabaseType.HSQL)
-                    .addScript("schema.sql")
-                    .addScript("initdata.sql")
-                    .build();
         }
 
         @Bean

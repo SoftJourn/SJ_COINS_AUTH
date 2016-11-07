@@ -1,6 +1,6 @@
 package com.softjourn.coin.auth.service;
 
-import com.softjourn.coin.auth.config.JPATestConfig;
+import com.softjourn.coin.auth.config.AuthTestConfiguration;
 import com.softjourn.coin.auth.entity.Role;
 import com.softjourn.coin.auth.entity.User;
 import com.softjourn.coin.auth.exception.DeletingSuperUserException;
@@ -25,8 +25,8 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = JPATestConfig.class)
 @DataJpaTest
+@SpringBootTest(classes = AuthTestConfiguration.class)
 @ContextConfiguration(classes = {RoleService.class})
 public class AdminServiceTest {
 
