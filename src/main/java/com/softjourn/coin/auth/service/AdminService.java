@@ -6,6 +6,7 @@ import com.softjourn.coin.auth.exception.*;
 import com.softjourn.coin.auth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
 import javax.naming.ConfigurationException;
@@ -15,6 +16,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+// RoleService should be created before AdminService as this service using roles.
+@DependsOn("roleService")
 @Service
 public class AdminService {
 
