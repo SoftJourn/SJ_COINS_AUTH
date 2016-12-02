@@ -18,6 +18,7 @@ public class TokenController{
     }
 
     @RequestMapping(value = "/oauth/token/revoke", method = RequestMethod.POST)
+    @ResponseStatus( HttpStatus.NO_CONTENT )
     public void revokeRefreshToken(@RequestParam(name = "token_value") String tokenValue) {
         OAuth2RefreshToken token = tokenStore.readRefreshToken(tokenValue);
         if (token == null) {
