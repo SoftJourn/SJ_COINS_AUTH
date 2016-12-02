@@ -232,7 +232,7 @@ public class TokenControllerTest {
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("token_value", "{refreshTokenValue}")
                 )
-                .andExpect(status().isOk())
+                .andExpect(status().is2xxSuccessful())
                 .andDo(document("revoke_refresh_token", preprocessResponse(prettyPrint())));
     }
 
