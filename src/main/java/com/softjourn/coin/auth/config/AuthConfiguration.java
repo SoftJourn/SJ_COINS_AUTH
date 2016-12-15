@@ -127,6 +127,8 @@ public class AuthConfiguration {
             http
                     .authorizeRequests()
                     .antMatchers("/oauth/token/revoke").permitAll()
+                    .antMatchers("/api/**").permitAll()
+                    .antMatchers("/admin/**").permitAll()
                     .antMatchers("/login").permitAll()
                     .anyRequest().authenticated()
 
