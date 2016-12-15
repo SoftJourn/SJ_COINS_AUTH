@@ -59,6 +59,18 @@ public class AuthConfiguration {
             this.tokenStore = tokenStore;
         }
 
+        @Bean
+        public static JwtAccessTokenConverter jwtAccessTokenConverter(@Value("${authKeyFileName}") String authKeyFileName,
+                                                                      @Value("${authKeyStorePass}") String authKeyStorePass,
+                                                                      @Value("${authKeyMasterPass}") String authKeyMasterPass,
+                                                                      @Value("${authKeyAlias}") String authKeyAlias) {
+            JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+            KeyPair keyPair = new KeyStoreKeyFactory(
+                    new ClassPathResource(authKeyFileName), authKeyStorePass.toCharArray())
+                    .getKeyPair(authKeyAlias, authKeyMasterPass.toCharArray());
+            converter.setKeyPair(keyPair);
+            return converter;
+        }
 
         public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
 
@@ -78,19 +90,6 @@ public class AuthConfiguration {
                     .accessTokenConverter(jwtAccessTokenConverter)
                     .userDetailsService(userDetailsService);
 
-        }
-
-        @Bean
-        public static JwtAccessTokenConverter jwtAccessTokenConverter(@Value("${authKeyFileName}") String authKeyFileName,
-                                                                      @Value("${authKeyStorePass}") String authKeyStorePass,
-                                                                      @Value("${authKeyMasterPass}") String authKeyMasterPass,
-                                                                      @Value("${authKeyAlias}") String authKeyAlias) {
-            JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-            KeyPair keyPair = new KeyStoreKeyFactory(
-                    new ClassPathResource(authKeyFileName), authKeyStorePass.toCharArray())
-                    .getKeyPair(authKeyAlias, authKeyMasterPass.toCharArray());
-            converter.setKeyPair(keyPair);
-            return converter;
         }
 
         @Bean
@@ -128,8 +127,6 @@ public class AuthConfiguration {
             http
                     .authorizeRequests()
                     .antMatchers("/oauth/token/revoke").permitAll()
-                    .antMatchers("/api/**").permitAll()
-                    .antMatchers("/admin/**").permitAll()
                     .antMatchers("/login").permitAll()
                     .anyRequest().authenticated()
 
