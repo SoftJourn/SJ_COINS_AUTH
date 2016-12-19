@@ -32,13 +32,13 @@ public class AdminService {
         this.userRepository = userRepository;
         this.ldapService = ldapService;
         this.removeSuperUsers(superRoles);
-        this.init(superAdmins,superRoles);
+        this.init(superAdmins, superRoles);
     }
 
     private void init(String[] superAdmins, String[] superRoles) throws ConfigurationException {
 
         if (superAdmins != null && superRoles != null && superAdmins.length > 0 && superRoles.length > 0) {
-            Arrays.stream(superAdmins).forEach(u -> addSuperUser(u,superRoles));
+            Arrays.stream(superAdmins).forEach(u -> addSuperUser(u, superRoles));
         } else {
             throw new ConfigurationException("Please set up proper super.admins and super.roles");
         }
@@ -46,7 +46,7 @@ public class AdminService {
     }
 
     private void removeSuperUsers(String[] superRoles) throws ConfigurationException {
-        if ( superRoles != null && superRoles.length > 0) {
+        if (superRoles != null && superRoles.length > 0) {
             userRepository.delete(this.getSuperAdmins(superRoles[0]));
         } else {
             throw new ConfigurationException("Please set up proper super.roles");
@@ -54,16 +54,16 @@ public class AdminService {
     }
 
     private List<User> getSuperAdmins(String superRole) {
-        Role role = new Role(superRole,true);
+        Role role = new Role(superRole, true);
         return userRepository.findByAuthorities(role);
     }
 
-    private User addSuperUser(String ldapName,String[] superRoles) {
+    private User addSuperUser(String ldapName, String[] superRoles) {
         User superUser = ldapService.getUser(ldapName);
         if (superUser != null) {
             //  Roles set up
             Set<Role> authorities = new HashSet<>();
-            Arrays.stream(superRoles).forEach(r -> authorities.add(new Role(r,true)));
+            Arrays.stream(superRoles).forEach(r -> authorities.add(new Role(r, true)));
             superUser.setAuthorities(authorities);
         } else {
             throw new IllegalArgumentException("There is no user with name " + ldapName + " " +
@@ -74,8 +74,8 @@ public class AdminService {
 
     }
 
-    boolean isAdmin(String login) {
-        return userRepository.exists(login);
+    boolean isAdmin(String ldapId) {
+        return userRepository.exists(ldapId);
     }
 
     public List<User> getAdmins() {
@@ -86,26 +86,40 @@ public class AdminService {
         return userRepository.findOne(ldapId);
     }
 
-    //TODO remove redundant operations
-    public User addNewAdmin(User user) {
-
-        User ldapUser = ldapService.getUser(user.getLdapId());
-        if (ldapUser != null) {
+    /**
+     * Add new regular admin
+     * Conditions:
+     * 1. User exists in LDAP database
+     * 2. User data from @param and LDAP should match exactly
+     * 3. Authorities are not empty in @param
+     * 4. User should not be admin
+     * 5. User should not have super role due to they are not allowed to be assigned in this method
+     *
+     * @param user
+     * @return user if conditions are sustained else exceptions
+     */
+    public User add(User user) {
+        try {
+            User ldapUser = ldapService.getUser(user.getLdapId());
+            if (ldapUser == null)
+                throw new LDAPNotFoundException("Wrong ldap name");
+            User ldapAnalogFromRequest = new User(user.getLdapId(), user.getFullName()
+                    , user.getEmail(), null);
+            if (!ldapAnalogFromRequest.equals(ldapUser))
+                throw new LDAPNotFoundException("Wrong user data");
             if (user.getAuthorities() == null || user.getAuthorities().isEmpty())
-                throw new IllegalArgumentException();
-            if (this.find(user.getLdapId()) == null) {
-                //Implement restriction of user roles
-                ldapUser.setAuthorities(user.getAuthorities());
-                this.add(ldapUser);
-                return ldapUser;
-            } else {
+                throw new IllegalArgumentException("Authorities are empty");
+            if (isAdmin(user))
                 throw new DuplicateEntryException(user);
-            }
+            if (isSuper(user))
+                throw new IllegalArgumentException("Super role can not be granted");
+            return userRepository.save(user);
 
-        } else {
-            throw new NoSuchLdapNameException(user);
+        } catch (RuntimeException e) {
+            if (e.getCause() instanceof EntityNotFoundException)
+                throw new NotValidRoleException(user);
+            throw e;
         }
-
     }
 
     //TODO remove redundant operations
@@ -122,30 +136,8 @@ public class AdminService {
         }
     }
 
-    public User add(User user) {
-        try {
-            if (isValid(user)) {
-                if (isAdmin(user))
-                    throw new DuplicateEntryException(user);
-                else
-                    return userRepository.save(user);
-            }
-            else
-                throw new IllegalAddException();
-        } catch (RuntimeException e) {
-            if (e.getCause() instanceof EntityNotFoundException)
-                throw new NotValidRoleException(user);
-            throw e;
-        }
-    }
-
     private boolean isAdmin(User user) {
         return isAdmin(user.getLdapId());
-    }
-
-    private boolean isValid(User user) {
-        return ldapService.userExist(user.getLdapId())
-                &&!isSuper(user);
     }
 
     public void delete(String ldapName) {
@@ -162,7 +154,7 @@ public class AdminService {
     private boolean isSuper(String ldapName) {
         try {
             return this.isSuper(userRepository.findOne(ldapName));
-        }catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
@@ -171,7 +163,7 @@ public class AdminService {
         try {
             Set<Role> authorities = user.getAuthorities();
             return authorities.stream().filter(Role::isSuperRole).count() > 0;
-        }catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }

@@ -23,9 +23,9 @@ public class GlobalControllerExceptionHandler {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(NoSuchLdapNameException.class)
-    public ResponseEntity<String> ldapNameDoesNotExists(NoSuchLdapNameException e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+    @ExceptionHandler(LDAPNotFoundException.class)
+    public ResponseEntity<String> ldapNameDoesNotExists(LDAPNotFoundException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

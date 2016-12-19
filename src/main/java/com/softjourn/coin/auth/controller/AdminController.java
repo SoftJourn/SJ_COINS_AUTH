@@ -26,7 +26,7 @@ public class AdminController {
 
     @RequestMapping(method = RequestMethod.POST)
     public User addNewAdmin(@RequestBody User user) {
-        return adminService.addNewAdmin(user);
+        return adminService.add(user);
     }
 
     @RequestMapping(value = "/{name:.+}", method = RequestMethod.POST)
