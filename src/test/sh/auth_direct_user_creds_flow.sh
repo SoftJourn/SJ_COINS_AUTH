@@ -14,7 +14,7 @@ tokens=(`curl --silent -i -k -G -X POST \
   -d "username="${yourLDAPid} \
   -d "password="${yourLDAPpassword} \
   -d "grant_type=password" \
-  https://localhost:8111/oauth/token \
+  http://localhost:8111/oauth/token \
   | grep -Po "((?<=access_token\":\")[^\"]+)|((?<=refresh_token\":\")[^\"]+)"`)
 
 echo "ACCESS_TOKEN: "${tokens[0]}

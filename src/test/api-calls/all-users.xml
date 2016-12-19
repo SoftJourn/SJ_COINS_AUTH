@@ -1,0 +1,34 @@
+<RestClientRequest>
+    <option name="biscuits">
+        <list/>
+    </option>
+    <option name="httpMethod" value="GET"/>
+    <option name="urlBase" value="http://localhost:8111"/>
+    <option name="urlPath" value="/api/v1/users"/>
+    <option name="headers">
+        <list>
+            <KeyValuePair>
+                <option name="key" value="Accept"/>
+                <option name="value" value="application/json"/>
+            </KeyValuePair>
+            <KeyValuePair>
+                <option name="key" value="Cache-Control"/>
+                <option name="value" value="no-cache"/>
+            </KeyValuePair>
+            <KeyValuePair>
+                <option name="key" value="Authorization"/>
+                <option name="value"
+                        value="Bearer eyJhbGciOiJSUzI1NiJ9.eyJleHAiOjE0ODIyMDMwODcsInVzZXJfbmFtZSI6InZyb21hbmNodWsiLCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiLCJST0xFX0lOVkVOVE9SWSJdLCJqdGkiOiI1YWY0YTY5Yy1iY2Q4LTRhMzgtYWY5MS1mYjU1MWQ5NmIzYWMiLCJjbGllbnRfaWQiOiJ1c2VyX2NyZWQiLCJzY29wZSI6WyJyZWFkIiwid3JpdGUiXX0.OzjT2AWQIqx7ZeOWezO38wW-q4XIKQJ3ONYdBlGqGsNa3GRNF8GbSFf_oZClTYbg1GbsOLOOMhO0Aq7YeRkZGtGZ-zCAe3-pOY5kTPZkY7N8gYq8xDuM12uVdJO1iED_Q5_7siW_MCS4bKLjFUvlA_O5zZTFRRvI7bF9CS2DDXR1RaGB0H5vcMxTWbA-lGj8P9gyYB5Ma9vS_On9P0UImyneV46q78_hBbY7YC0lBjKe_FrdpJHTPh8w0EnuSMmpuzePBDV8gjI9ztg7G174lHZNXcsIlB-hOpyjyl7g0G81kzwmGX2IgMB6otVdcNsbyLNMpPmR-f_6eWnTnKfYyg"/>
+            </KeyValuePair>
+        </list>
+    </option>
+    <option name="parameters">
+        <list/>
+    </option>
+    <option name="parametersEnabled" value="true"/>
+    <option name="haveTextToSend" value="false"/>
+    <option name="haveFileToSend" value="false"/>
+    <option name="isFileUpload" value="false"/>
+    <option name="textToSend" value=""/>
+    <option name="filesToSend" value=""/>
+</RestClientRequest>

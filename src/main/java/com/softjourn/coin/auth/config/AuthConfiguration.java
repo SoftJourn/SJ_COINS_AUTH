@@ -19,6 +19,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
@@ -122,14 +124,23 @@ public class AuthConfiguration {
                     .antMatchers("/scripts/**");
         }
 
+        @Autowired
+        void configureGlobal(AuthenticationManagerBuilder auth, AuthenticationProvider provider) throws Exception {
+            auth.authenticationProvider(provider);
+        }
+    }
+
+    @Configuration
+    @EnableResourceServer
+    public static class OAuthResourceServer extends ResourceServerConfigurerAdapter {
         @Override
-        protected void configure(HttpSecurity http) throws Exception {
+        public void configure(HttpSecurity http) throws Exception {
             http
                     .authorizeRequests()
-                    .antMatchers("/oauth/token/revoke").permitAll()
-                    .antMatchers("/api/**").permitAll()
-                    .antMatchers("/admin/**").permitAll()
                     .antMatchers("/login").permitAll()
+                    .antMatchers("/api/v1/admin/**").hasAnyRole("SUPER_ADMIN", "USER_MANAGER")
+                    .antMatchers("/api/v1/users/**").hasAnyRole("BILLING", "INVENTORY", "SUPER_ADMIN", "USER_MANAGER")
+                    .antMatchers("/oauth/token/revoke").authenticated()
                     .anyRequest().authenticated()
 
                     .and()
@@ -138,16 +149,7 @@ public class AuthConfiguration {
                     .defaultSuccessUrl("/")
 
                     .and()
-                    .csrf()
-                    .ignoringAntMatchers("/oauth/**")
-                    .ignoringAntMatchers("/api/**")
-                    .ignoringAntMatchers("/admin/**");
-
-        }
-
-        @Autowired
-        void configureGlobal(AuthenticationManagerBuilder auth, AuthenticationProvider provider) throws Exception {
-            auth.authenticationProvider(provider);
+                    .csrf().disable();
         }
     }
 }
