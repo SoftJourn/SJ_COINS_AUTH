@@ -86,6 +86,42 @@ public class AdminService {
         return userRepository.findOne(ldapId);
     }
 
+    //TODO remove redundant operations
+    public User addNewAdmin(User user) {
+
+        User ldapUser = ldapService.getUser(user.getLdapId());
+        if (ldapUser != null) {
+            if (user.getAuthorities() == null || user.getAuthorities().isEmpty())
+                throw new IllegalArgumentException();
+            if (this.find(user.getLdapId()) == null) {
+                //Implement restriction of user roles
+                ldapUser.setAuthorities(user.getAuthorities());
+                this.add(ldapUser);
+                return ldapUser;
+            } else {
+                throw new DuplicateEntryException(user);
+            }
+
+        } else {
+            throw new NoSuchLdapNameException(user);
+        }
+
+    }
+
+    //TODO remove redundant operations
+    public User updateAdmin(User user, String name) {
+        User updateAdmin = this.find(name);
+        if (updateAdmin != null) {
+            if (user.getAuthorities().isEmpty())
+                throw new IllegalArgumentException();
+            updateAdmin.setAuthorities(user.getAuthorities());
+            this.updateAdmin(updateAdmin);
+            return updateAdmin;
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+
     public User add(User user) {
         try {
             if (isValid(user)) {
