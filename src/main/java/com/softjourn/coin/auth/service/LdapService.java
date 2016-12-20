@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -27,12 +27,17 @@ public class LdapService {
 
     public List<User> getAllUsers() {
         List<User> result = ldapTemplate.search(ldapUsersBase, "(&(mail=*)(objectClass=person))", new UserAttributesMapper());
-        Collections.sort(result, (o1, o2) -> o1.getFullName().compareTo(o2.getFullName()));
+        result.sort(Comparator.comparing(User::getFullName));
         return result;
     }
 
-    public boolean userExist(String ldapId) {
-        return getUser(ldapId) != null;
+    boolean userExist(User user) {
+        User ldapUser = getUser(user.getLdapId());
+        if (ldapUser == null)
+            return false;
+        User ldapAnalogFromRequest = new User(user.getLdapId(), user.getFullName()
+                , user.getEmail(), null);
+        return ldapUser.equals(ldapAnalogFromRequest);
     }
 
     public User getUser(String ldapId) {
@@ -40,4 +45,3 @@ public class LdapService {
         return result.stream().findFirst().orElse(null);
     }
 }
-

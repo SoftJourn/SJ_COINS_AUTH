@@ -100,12 +100,8 @@ public class AdminService {
      */
     public User add(User user) {
         try {
-            User ldapUser = ldapService.getUser(user.getLdapId());
-            if (ldapUser == null)
-                throw new LDAPNotFoundException("Wrong ldap name");
-            User ldapAnalogFromRequest = new User(user.getLdapId(), user.getFullName()
-                    , user.getEmail(), null);
-            if (!ldapAnalogFromRequest.equals(ldapUser))
+
+            if (!ldapService.userExist(user))
                 throw new LDAPNotFoundException("Wrong user data");
             if (user.getAuthorities() == null || user.getAuthorities().isEmpty())
                 throw new IllegalArgumentException("Authorities are empty");
@@ -122,18 +118,23 @@ public class AdminService {
         }
     }
 
-    //TODO remove redundant operations
-    public User updateAdmin(User user, String name) {
-        User updateAdmin = this.find(name);
-        if (updateAdmin != null) {
-            if (user.getAuthorities().isEmpty())
-                throw new IllegalArgumentException();
-            updateAdmin.setAuthorities(user.getAuthorities());
-            this.updateAdmin(updateAdmin);
-            return updateAdmin;
-        } else {
-            throw new IllegalArgumentException();
+    public User update(User user) {
+        try {
+            if (!ldapService.userExist(user))
+                throw new LDAPNotFoundException("Wrong user data");
+            if (user.getAuthorities() == null || user.getAuthorities().isEmpty())
+                throw new IllegalArgumentException("Authorities are empty");
+            //TODO find out why userRepository.save calls remove method from setAuthority HashSet
+            //TEST method update_testUserWithWrongName_LDAPNotFoundException
+            user.setAuthorities(new HashSet<>(user.getAuthorities()));
+            userRepository.save(user);
+            return user;
+        } catch (RuntimeException e) {
+            if (e.getCause() instanceof EntityNotFoundException)
+                throw new NotValidRoleException(user);
+            throw e;
         }
+
     }
 
     private boolean isAdmin(User user) {
@@ -166,11 +167,6 @@ public class AdminService {
         } catch (Exception e) {
             return false;
         }
-    }
-
-
-    public void updateAdmin(User updatedUser) {
-        userRepository.save(updatedUser);
     }
 
     void delete(User testUser) {

@@ -21,6 +21,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.naming.ConfigurationException;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
@@ -32,12 +34,11 @@ import static org.mockito.Mockito.when;
 public class AdminServiceTest {
 
     private final Role testRole = new Role("ROLE_TEST");
+    private final Role testRoleUpdate = new Role("ROLE_TEST_UPDATE");
     private final User testUser = new User("ldap_test", "full_name"
             , "email@email", Collections.singleton(testRole));
     private final User testUserWithWrongName = new User("ldap_test", "wrong_name"
             , "email@email", Collections.singleton(testRole));
-    private final User testUserAtLDAP = new User("ldap_test", "full_name"
-            , "email@email", null);
     private final User testUserThatNotExistsInLDAP = new User("illegal_user", "full_name"
             , "email@email", null);
     @Value("${super.roles}")
@@ -53,49 +54,38 @@ public class AdminServiceTest {
     @Value("${super.admins}")
     private String[] superUsers;
     private User testSuperUser;
-    private User testSuperUserAtLDAP;
+
+    @Before
+    public void init() throws ConfigurationException {
+        //Injected Mock set up
+        adminService = new AdminService(userRepository, ldapService, superUsers, superRoles);
+    }
 
     @Before
     public void setUpSuperUsers() throws ConfigurationException {
         this.testSuperUser = new User("new_super_user", "full_name", "email@email"
                 , Collections.singleton(new Role(superRoles[0], true)));
-        this.testSuperUserAtLDAP = new User("new_super_user", "full_name", "email@email"
-                , null);
-
     }
 
     @Before
     public void setUp() throws ConfigurationException {
 
+        //Post construct init super user
+        when(ldapService.getUser(superUsers[0])).thenReturn(new User(superUsers[0], "FULL NAME", "EMAIL@email", null));
         // set up roles
         this.roleService.add(testRole);
 
-        when(ldapService.userExist("new_super_user")).thenReturn(true);
-
         //legal test user ldap
-        when(ldapService.userExist(testUser.getLdapId())).thenReturn(true);
-        //legal test users in ldap
-        when(ldapService.userExist(testUser.getLdapId())).thenReturn(true);
-        when(ldapService.userExist("ldap_test_valid")).thenReturn(true);
-        when(ldapService.getUser("ldap_test_valid")).thenReturn(
-                new User("ldap_test_valid", "full_name", "email@email", null));
-        //return test user
-        when(ldapService.getUser(testUser.getLdapId())).thenReturn(testUserAtLDAP);
+        when(ldapService.userExist(testUser)).thenReturn(true);
+        when(ldapService.userExist(testSuperUser)).thenReturn(true);
 
-        //for init super user in application start up
-        when(ldapService.getUser(superUsers[0])).thenReturn(new User(superUsers[0], "FULL NAME", "EMAIL@email", null));
-        when(ldapService.getUser(testSuperUser.getLdapId())).thenReturn(testSuperUserAtLDAP);
-
-        //Injected Mock set up
-        adminService = new AdminService(userRepository, ldapService, superUsers, superRoles);
     }
 
     @Test(expected = NotValidRoleException.class)
     public void add_ValidUserWithNotValidRole_NotValidRoleException() {
         Role notValidRole = new Role("ROLE_NOT_VALID");
-        User notValidUser = new User("ldap_test_valid", "full_name", "email@email"
-                , Collections.singleton(notValidRole));
-        adminService.add(notValidUser);
+        testUser.setAuthorities(Collections.singleton(notValidRole));
+        adminService.add(testUser);
     }
 
     @Test
@@ -117,13 +107,8 @@ public class AdminServiceTest {
 
     @Test(expected = DuplicateEntryException.class)
     public void add_DuplicateUser_ThrowsException() throws Exception {
-        try {
             adminService.add(testUser);
             adminService.add(testUser);
-        } finally {
-            adminService.delete(testUser);
-        }
-
     }
 
     @Test
@@ -140,7 +125,6 @@ public class AdminServiceTest {
 
     @Test
     public void delete_ExistsAdmin_ActualDelete() {
-        assertEquals(roleService.add(testRole), testRole);
         assertEquals(adminService.add(testUser), testUser);
         assertEquals(adminService.find(testUser.getLdapId()), testUser);
         adminService.delete(testUser.getLdapId());
@@ -152,7 +136,6 @@ public class AdminServiceTest {
         assertEquals(roleService.add(testRole), testRole);
         assertEquals(adminService.add(testUser), testUser);
         assertTrue(adminService.isAdmin(testUser.getLdapId()));
-        adminService.delete(testUser.getLdapId());
     }
 
     @Test
@@ -170,9 +153,47 @@ public class AdminServiceTest {
         adminService.add(testUserWithWrongName);
     }
 
-    @Test
-    public void updateAdmin() throws Exception {
+    private void updateTestFunction(User user, Role testRole) throws Exception {
+        assertEquals(adminService.add(testUser), testUser);
+        Set<Role> authorities = user.getAuthorities();
+        Set<Role> newAuth = new HashSet<>(authorities);
+        newAuth.add(testRole);
+        user.setAuthorities(newAuth);
+        assertNotEquals(user.getAuthorities(), authorities);
+        assertEquals(adminService.update(user), user);
+        assertEquals(adminService.find(user.getLdapId()), user);
+    }
 
+    @Test(expected = NotValidRoleException.class)
+    //Role update does not exists
+    public void update_testUserWithNotValidRoleUpdate_NotValidRoleException() throws Exception {
+        this.updateTestFunction(testUser, testRoleUpdate);
+    }
+
+    @Test
+    // Role update exists
+    public void update_testUserWithValidRoleUpdate_testUserWithValidRoleUpdate() throws Exception {
+        this.roleService.add(testRoleUpdate);
+        this.updateTestFunction(testUser, testRoleUpdate);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void update_testUserWithEmptyAuthoritiesSet_IllegalArgumentException() throws Exception {
+        assertEquals(adminService.add(testUser), testUser);
+        testUser.setAuthorities(null);
+        assertEquals(adminService.update(testUser), testUser);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void update_testUserWithEmptyAuthority_IllegalArgumentException() throws Exception {
+        assertEquals(adminService.add(testUser), testUser);
+        testUser.setAuthorities(new HashSet<>());
+        adminService.update(testUser);
+    }
+
+    @Test(expected = LDAPNotFoundException.class)
+    public void update_userDoesNotExist_LDAPNotFoundException() throws Exception {
+        adminService.update(testUserThatNotExistsInLDAP);
     }
 
 }

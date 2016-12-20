@@ -31,7 +31,7 @@ public class AdminController {
 
     @RequestMapping(value = "/{name:.+}", method = RequestMethod.POST)
     public User updateAdmin(@RequestBody User user, @PathVariable String name) {
-        return adminService.updateAdmin(user, name);
+        return adminService.update(user);
     }
 
     @RequestMapping(value = "/{name:.+}", method = RequestMethod.DELETE)
