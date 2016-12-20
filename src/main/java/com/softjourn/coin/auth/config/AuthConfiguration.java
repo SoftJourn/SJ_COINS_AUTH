@@ -124,6 +124,11 @@ public class AuthConfiguration {
                     .antMatchers("/scripts/**");
         }
 
+        @Override
+        public void configure(HttpSecurity http) throws Exception {
+            http.csrf().ignoringAntMatchers("/oauth/token/revoke");
+        }
+
         @Autowired
         void configureGlobal(AuthenticationManagerBuilder auth, AuthenticationProvider provider) throws Exception {
             auth.authenticationProvider(provider);
