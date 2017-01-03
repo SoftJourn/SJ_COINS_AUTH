@@ -1,6 +1,6 @@
 package com.softjourn.coin.auth.controller;
 
-import com.softjourn.coin.auth.config.AuthTestConfiguration;
+import com.softjourn.coin.auth.utility.OAuthHelper;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,6 +21,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -39,23 +40,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = AuthTestConfiguration.class)
+@SpringBootTest//(classes = AuthTestConfiguration.class)
 @WebAppConfiguration
 @DataJpaTest
 public class TokenControllerTest {
 
     @Rule
     public final JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation("target/generated-snippets");
-
+    Authentication authentication;
+    @Autowired
+    OAuthHelper authHelper;
     @Autowired
     private WebApplicationContext context;
-
     @Autowired
     private TokenEndpoint tokenEndpoint;
-
     private MockMvc mockMvc;
-
-    Authentication authentication;
 
     @Before
     public synchronized void setUp() {
@@ -226,11 +225,14 @@ public class TokenControllerTest {
 
     @Test
     public void testRevokeRefreshToken() throws Exception {
+        OAuth2AccessToken token = authHelper.generateToken("test", "test");
+        RequestPostProcessor bearerToken = authHelper.withToken(token);
         mockMvc
                 .perform(RestDocumentationRequestBuilders
                         .post("/oauth/token/revoke")
+                        .with(bearerToken)
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("token_value", "{refreshTokenValue}")
+                        .param("token_value", token.getRefreshToken().getValue())
                 )
                 .andExpect(status().is2xxSuccessful())
                 .andDo(document("revoke_refresh_token", preprocessResponse(prettyPrint())));

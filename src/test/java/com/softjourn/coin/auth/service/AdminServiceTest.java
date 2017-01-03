@@ -1,6 +1,5 @@
 package com.softjourn.coin.auth.service;
 
-import com.softjourn.coin.auth.config.AuthTestConfiguration;
 import com.softjourn.coin.auth.entity.Role;
 import com.softjourn.coin.auth.entity.User;
 import com.softjourn.coin.auth.exception.DeletingSuperUserException;
@@ -14,9 +13,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.naming.ConfigurationException;
@@ -29,8 +29,9 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-@SpringBootTest(classes = AuthTestConfiguration.class)
-@ContextConfiguration(classes = {RoleService.class})
+@EnableJpaRepositories(basePackages = "com.softjourn.coin.auth.repository")
+@EntityScan(basePackages = "com.softjourn.coin.auth.entity")
+@SpringBootTest(classes = {RoleService.class})
 public class AdminServiceTest {
 
     private final Role testRole = new Role("ROLE_TEST");

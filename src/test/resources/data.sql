@@ -1,5 +1,3 @@
-DROP TABLE IF EXISTS oauth_client_details;
-
 CREATE TABLE oauth_client_details
 (
   client_id VARCHAR(64) PRIMARY KEY NOT NULL,
@@ -14,12 +12,10 @@ CREATE TABLE oauth_client_details
   additional_information VARCHAR(4096),
   autoapprove VARCHAR(256)
 );
-
-INSERT INTO oauth_client_details
-(client_id, resource_ids, client_secret,
- scope, authorized_grant_types, web_server_redirect_uri,
- authorities, access_token_validity, refresh_token_validity,
- additional_information, autoapprove)
+INSERT INTO oauth_client_details (client_id, resource_ids, client_secret,
+                                  scope, authorized_grant_types, web_server_redirect_uri,
+                                  authorities, access_token_validity, refresh_token_validity,
+                                  additional_information, autoapprove)
 VALUES
   ('client', NULL, 'secret',
                 'read,write', 'password,refresh_token,authorization_code,implicit', 'client.redirect.uri',

@@ -1,6 +1,5 @@
 package com.softjourn.coin.auth.service;
 
-import com.softjourn.coin.auth.config.AuthTestConfiguration;
 import com.softjourn.coin.auth.entity.Role;
 import com.softjourn.coin.auth.exception.IllegalAddException;
 import org.junit.Before;
@@ -9,8 +8,10 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -19,17 +20,20 @@ import static org.junit.Assert.*;
 
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = AuthTestConfiguration.class)
+@SpringBootTest
+@EnableJpaRepositories(basePackages = "com.softjourn.coin.auth.repository")
+@EntityScan(basePackages = "com.softjourn.coin.auth.entity")
 @DataJpaTest
 @ContextConfiguration(classes = {RoleService.class})
 public class RoleServiceTest {
 
 
-    @Autowired
-    private RoleService roleService;
-
     private final String ROLE = "ROLE_TEST";
     private final String[] SUPER_ROLES = new String[]{"ROLE_SUPER_ADMIN"};
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+    @Autowired
+    private RoleService roleService;
 
     @Before
     public void setUp() {
@@ -67,9 +71,6 @@ public class RoleServiceTest {
         assertNull(roleService.get(ROLE));
 
     }
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void testRemoveSuperRole() {
