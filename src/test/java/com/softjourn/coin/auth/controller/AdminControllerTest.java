@@ -10,22 +10,27 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashSet;
 
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -34,27 +39,27 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 // Creates embedded database
 // Spring Boot can auto-configure embedded H2, HSQL and Derby databases
 @AutoConfigureTestDatabase
+@AutoConfigureRestDocs("target/generated-snippets")
+@AutoConfigureMockMvc(secure = false)
 public class AdminControllerTest {
-
 
     private final Role testRole = new Role("ROLE_TEST");
     private final User testUser = new User("ldap_test", "full_name"
-            , "email@email", Collections.singleton(testRole));
+            , "email@email", new HashSet<Role>() {{
+        add(testRole);
+    }});
+
     @Autowired
     private WebApplicationContext context;
+
     @Autowired
     private OAuthHelper authHelper;
+
+    @Autowired
     private MockMvc mvc;
+
     @MockBean
     private AdminService adminService;
-
-    @Before
-    public void setup() {
-        mvc = MockMvcBuilders
-                .webAppContextSetup(context)
-                .apply(springSecurity())
-                .build();
-    }
 
     @Before
     public void setUp() throws Exception {
@@ -64,12 +69,67 @@ public class AdminControllerTest {
     }
 
     @Test
-    public void getAll_AllUser() throws Exception {
-        RequestPostProcessor bearerToken = authHelper.withUser("test", "ROLE_USER_MANAGER");
-        ResultActions resultActions = mvc.perform(get("/api/v1/admin").with(bearerToken)).andDo(print());
+    public void getAll_WithoutRole_UnauthorizedRequest() throws Exception {
+        mvc.perform(
+                RestDocumentationRequestBuilders
+                        .get("/api/v1/admin")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
+    }
 
-        resultActions
+    @Test
+    public void getAll_WithRoleUser_Forbidden() throws Exception {
+        RequestPostProcessor bearerToken = authHelper.withUser("test", "ROLE_USER");
+
+        mvc.perform(
+                RestDocumentationRequestBuilders
+                        .get("/api/v1/admin")
+                        .with(bearerToken)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void getAll_WithRoleSuperUser_AllUser() throws Exception {
+        RequestPostProcessor bearerToken = authHelper.withUser("test", "ROLE_SUPER_ADMIN");
+
+        mvc.perform(
+                RestDocumentationRequestBuilders
+                        .get("/api/v1/admin")
+                        .with(bearerToken)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getAll_WithRoleUserManager_AllUser() throws Exception {
+
+        RequestPostProcessor bearerToken = authHelper.withUser("test", "ROLE_USER_MANAGER");
+
+        FieldDescriptor[] role = new FieldDescriptor[]{
+                fieldWithPath("authority").description("Role name with prefix 'ROLE_'"),
+                fieldWithPath("superRole").description("Bool value. Is this role super role?")
+        };
+
+        FieldDescriptor[] user = new FieldDescriptor[]{
+                fieldWithPath("ldapId").description("vpupkin"),
+                fieldWithPath("fullName").description("Vasuliy Pupkin"),
+                fieldWithPath("email").description("vpupkin@softjoun.com"),
+                fieldWithPath("authorities").description("ROLE_ADMIN")
+
+        };
+
+        mvc.perform(
+                RestDocumentationRequestBuilders
+                        .get("/api/v1/admin")
+                        .with(bearerToken)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(document("get_all_admins", preprocessResponse(prettyPrint()),
+                        responseFields(fieldWithPath("[]").description("An array of users"))
+                                .andWithPrefix("[].", user)
+                                .andWithPrefix("[].authorities.[].", role)));
+
     }
 }
 

@@ -172,3 +172,18 @@ include::{snippets}/revoke_refresh_token/http-request.adoc[]
 ==== Example response
 
 include::{snippets}/revoke_refresh_token/http-response.adoc[]
+
+[[get-all-admin]]
+=== Getting all admin users
+
+==== Example request
+
+include::{snippets}/get_all_admins/http-request.adoc[]
+
+==== Example response
+
+include::{snippets}/get_all_admins/http-response.adoc[]
+
+==== Response structure
+
+include::{snippets}/get_all_admins/response-fields.adoc[]
