@@ -137,6 +137,13 @@ public class AdminService {
 
     }
 
+    public User update(User user, String name) {
+        if (user.getLdapId() != null && user.getLdapId().equals(name))
+            return update(user);
+        else
+            throw new IllegalArgumentException("Name in url does not match user in body");
+    }
+
     private boolean isAdmin(User user) {
         return isAdmin(user.getLdapId());
     }

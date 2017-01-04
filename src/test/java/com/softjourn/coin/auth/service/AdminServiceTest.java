@@ -197,4 +197,13 @@ public class AdminServiceTest {
         adminService.update(testUserThatNotExistsInLDAP);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void update_TestUser_NameThatDiffersFromTestUserName_ConflictException() throws Exception {
+        adminService.update(testUser, "NameThatDiffersFromTestUserName");
+    }
+
+    @Test
+    public void update_TestUser_TestUserName_TestUser() throws Exception {
+        assertEquals(adminService.update(testUser, testUser.getLdapId()), testUser);
+    }
 }
