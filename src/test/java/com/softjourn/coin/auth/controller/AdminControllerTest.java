@@ -4,6 +4,7 @@ package com.softjourn.coin.auth.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softjourn.coin.auth.entity.Role;
 import com.softjourn.coin.auth.entity.User;
+import com.softjourn.coin.auth.exception.NoSuchUserException;
 import com.softjourn.coin.auth.service.AdminService;
 import com.softjourn.coin.auth.utility.OAuthHelper;
 import org.junit.Before;
@@ -33,6 +34,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -50,6 +52,10 @@ public class AdminControllerTest {
             , "email@email", new HashSet<Role>() {{
         add(testRole);
     }});
+    private final User testUserNotAdmin = new User("testUserNotAdmin", "full_name"
+            , "email@email", new HashSet<Role>() {{
+        add(testRole);
+    }});
 
     @Autowired
     private WebApplicationContext context;
@@ -62,6 +68,7 @@ public class AdminControllerTest {
 
     @MockBean
     private AdminService adminService;
+
     @Autowired
     private ObjectMapper mapper;
     private FieldDescriptor[] role = new FieldDescriptor[]{
@@ -83,6 +90,7 @@ public class AdminControllerTest {
         }});
         when(adminService.add(testUser)).thenReturn(testUser);
         when(adminService.update(testUser)).thenReturn(testUser);
+        when(adminService.update(testUserNotAdmin, testUserNotAdmin.getLdapId())).thenThrow(new NoSuchUserException("User is not admin афіва"));
     }
 
     private String json(Object o) throws IOException {
@@ -182,15 +190,98 @@ public class AdminControllerTest {
     @Test
     public void addNewAdmin_testUserWithRoleUser_Forbidden() throws Exception {
         RequestPostProcessor bearerToken = authHelper.withUser("test", "ROLE_USER");
-        mvc.perform(
-                RestDocumentationRequestBuilders
-                        .post("/api/v1/admin")
-                        .content(json(testUser))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .with(bearerToken)
-                        .accept(MediaType.APPLICATION_JSON))
+        mvc.perform(RestDocumentationRequestBuilders
+                .post("/api/v1/admin")
+                .content(json(testUser))
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(bearerToken)
+                .accept(MediaType.APPLICATION_JSON)
+        )
                 .andExpect(status().isForbidden());
     }
+
+    @Test
+    public void updateAdmin_testUserWithRoleSuperAdmin_testUser() throws Exception {
+        RequestPostProcessor bearerToken = authHelper.withUser("test", "ROLE_SUPER_ADMIN");
+        mvc.perform(RestDocumentationRequestBuilders
+                .post("/api/v1/admin")
+                .content(json(testUser))
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(bearerToken)
+                .accept(MediaType.APPLICATION_JSON)
+        )
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void updateAdmin_testUserWithRoleUserManager_testUser() throws Exception {
+        RequestPostProcessor bearerToken = authHelper.withUser("test", "ROLE_USER_MANAGER");
+        mvc.perform(RestDocumentationRequestBuilders
+                .post("/api/v1/admin")
+                .content(json(testUser))
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(bearerToken)
+                .accept(MediaType.APPLICATION_JSON)
+        )
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void updateAdmin_testUserWithRoleUser_Forbidden() throws Exception {
+        RequestPostProcessor bearerToken = authHelper.withUser("test", "ROLE_USER");
+        mvc.perform(RestDocumentationRequestBuilders
+                .post("/api/v1/admin")
+                .content(json(testUser))
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(bearerToken)
+                .accept(MediaType.APPLICATION_JSON)
+        )
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void updateAdmin_testUserNotAdmin_HttpStatusNotFound() throws Exception {
+        RequestPostProcessor bearerToken = authHelper.withUser("test", "ROLE_SUPER_ADMIN");
+        mvc.perform(RestDocumentationRequestBuilders
+                .post("/api/v1/admin/" + testUserNotAdmin.getLdapId())
+                .content(json(testUserNotAdmin))
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(bearerToken)
+                .accept(MediaType.APPLICATION_JSON)
+        )
+                .andExpect(status().isNotFound()).andDo(print());
+    }
+
+    @Test
+    public void delete_testUserWithRoleSuperAdmin_testUser() throws Exception {
+        RequestPostProcessor bearerToken = authHelper.withUser("test", "ROLE_SUPER_ADMIN");
+        mvc.perform(RestDocumentationRequestBuilders
+                .delete("/api/v1/admin/" + testUser.getLdapId())
+                .with(bearerToken)
+        )
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void delete_testUserWithRoleUserManager_testUser() throws Exception {
+        RequestPostProcessor bearerToken = authHelper.withUser("test", "ROLE_USER_MANAGER");
+        mvc.perform(RestDocumentationRequestBuilders
+                .delete("/api/v1/admin/" + testUser.getLdapId())
+                .with(bearerToken)
+        )
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void delete_testUserWithRoleUser_Forbidden() throws Exception {
+        RequestPostProcessor bearerToken = authHelper.withUser("test", "ROLE_USER");
+        mvc.perform(RestDocumentationRequestBuilders
+                .delete("/api/v1/admin/" + testUser.getLdapId())
+                .with(bearerToken)
+        )
+                .andExpect(status().isForbidden());
+    }
+
 
 }
 

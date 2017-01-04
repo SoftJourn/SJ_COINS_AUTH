@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class GlobalControllerExceptionHandler {
+    //TODO change to exception pattern like in vending server. ErrorDetail class
     @ExceptionHandler(DeletingSuperUserException.class)
     public ResponseEntity<String> deletingSuperUserRequest(DeletingSuperUserException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);

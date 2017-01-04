@@ -2,10 +2,7 @@ package com.softjourn.coin.auth.service;
 
 import com.softjourn.coin.auth.entity.Role;
 import com.softjourn.coin.auth.entity.User;
-import com.softjourn.coin.auth.exception.DeletingSuperUserException;
-import com.softjourn.coin.auth.exception.DuplicateEntryException;
-import com.softjourn.coin.auth.exception.LDAPNotFoundException;
-import com.softjourn.coin.auth.exception.NotValidRoleException;
+import com.softjourn.coin.auth.exception.*;
 import com.softjourn.coin.auth.repository.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,16 +39,20 @@ public class AdminServiceTest {
             , "email@email", Collections.singleton(testRole));
     private final User testUserThatNotExistsInLDAP = new User("illegal_user", "full_name"
             , "email@email", null);
+
     @Value("${super.roles}")
     String[] superRoles;
+
     @Autowired
     @SuppressWarnings("SpringJavaAutowiringInspection")
     private UserRepository userRepository;
     @Mock
     private LdapService ldapService;
+
     @Autowired
     private RoleService roleService;
     private AdminService adminService;
+
     @Value("${super.admins}")
     private String[] superUsers;
     private User testSuperUser;
@@ -108,8 +109,8 @@ public class AdminServiceTest {
 
     @Test(expected = DuplicateEntryException.class)
     public void add_DuplicateUser_ThrowsException() throws Exception {
-            adminService.add(testUser);
-            adminService.add(testUser);
+        adminService.add(testUser);
+        adminService.add(testUser);
     }
 
     @Test
@@ -204,6 +205,12 @@ public class AdminServiceTest {
 
     @Test
     public void update_TestUser_TestUserName_TestUser() throws Exception {
+        assertEquals(adminService.add(testUser), testUser);
         assertEquals(adminService.update(testUser, testUser.getLdapId()), testUser);
+    }
+
+    @Test(expected = NoSuchUserException.class)
+    public void update_TestUserNotAdmin_NoSuchUserException() throws Exception {
+        adminService.update(testUser);
     }
 }

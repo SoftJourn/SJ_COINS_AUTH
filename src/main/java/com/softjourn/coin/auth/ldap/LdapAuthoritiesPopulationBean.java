@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.ldap.userdetails.LdapAuthoritiesPopulator;
@@ -28,9 +27,6 @@ import java.util.stream.Stream;
 @Slf4j
 @Component
 public class LdapAuthoritiesPopulationBean implements LdapAuthoritiesPopulator {
-
-    @Value("${super.admins}")
-    String[] superAdminLdapName;
 
     private final AdminService adminService;
 
