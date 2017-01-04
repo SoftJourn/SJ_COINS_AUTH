@@ -1,6 +1,7 @@
 package com.softjourn.coin.auth.controller;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softjourn.coin.auth.entity.Role;
 import com.softjourn.coin.auth.entity.User;
 import com.softjourn.coin.auth.service.AdminService;
@@ -22,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -60,12 +62,31 @@ public class AdminControllerTest {
 
     @MockBean
     private AdminService adminService;
+    @Autowired
+    private ObjectMapper mapper;
+    private FieldDescriptor[] role = new FieldDescriptor[]{
+            fieldWithPath("authority").description("Role name with prefix 'ROLE_'"),
+            fieldWithPath("superRole").description("Bool value. Is this role super role?")
+    };
+    private FieldDescriptor[] user = new FieldDescriptor[]{
+            fieldWithPath("ldapId").description("vpupkin"),
+            fieldWithPath("fullName").description("Vasuliy Pupkin"),
+            fieldWithPath("email").description("vpupkin@softjoun.com"),
+            fieldWithPath("authorities").description("ROLE_ADMIN")
+
+    };
 
     @Before
     public void setUp() throws Exception {
         when(adminService.getAdmins()).thenReturn(new ArrayList<User>() {{
             add(testUser);
         }});
+        when(adminService.add(testUser)).thenReturn(testUser);
+        when(adminService.update(testUser)).thenReturn(testUser);
+    }
+
+    private String json(Object o) throws IOException {
+        return mapper.writeValueAsString(o);
     }
 
     @Test
@@ -106,19 +127,6 @@ public class AdminControllerTest {
 
         RequestPostProcessor bearerToken = authHelper.withUser("test", "ROLE_USER_MANAGER");
 
-        FieldDescriptor[] role = new FieldDescriptor[]{
-                fieldWithPath("authority").description("Role name with prefix 'ROLE_'"),
-                fieldWithPath("superRole").description("Bool value. Is this role super role?")
-        };
-
-        FieldDescriptor[] user = new FieldDescriptor[]{
-                fieldWithPath("ldapId").description("vpupkin"),
-                fieldWithPath("fullName").description("Vasuliy Pupkin"),
-                fieldWithPath("email").description("vpupkin@softjoun.com"),
-                fieldWithPath("authorities").description("ROLE_ADMIN")
-
-        };
-
         mvc.perform(
                 RestDocumentationRequestBuilders
                         .get("/api/v1/admin")
@@ -131,6 +139,59 @@ public class AdminControllerTest {
                                 .andWithPrefix("[].authorities.[].", role)));
 
     }
+
+    @Test
+    public void addNewAdmin_testUserWithRoleUserManger_testUser() throws Exception {
+        RequestPostProcessor bearerToken = authHelper.withUser("test", "ROLE_USER_MANAGER");
+        mvc.perform(
+                RestDocumentationRequestBuilders
+                        .post("/api/v1/admin")
+                        .content(json(testUser))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(bearerToken)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(document("add_new_admin", preprocessResponse(prettyPrint())
+                        , responseFields(user).andWithPrefix("authorities.[].", role)));
+    }
+
+    @Test
+    public void addNewAdmin_testUserWithSuperAdmin_testUser() throws Exception {
+        RequestPostProcessor bearerToken = authHelper.withUser("test", "ROLE_SUPER_ADMIN");
+        mvc.perform(
+                RestDocumentationRequestBuilders
+                        .post("/api/v1/admin")
+                        .content(json(testUser))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(bearerToken)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void addNewAdmin_testUserWithoutToken_Unauthorized() throws Exception {
+        mvc.perform(
+                RestDocumentationRequestBuilders
+                        .post("/api/v1/admin")
+                        .content(json(testUser))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void addNewAdmin_testUserWithRoleUser_Forbidden() throws Exception {
+        RequestPostProcessor bearerToken = authHelper.withUser("test", "ROLE_USER");
+        mvc.perform(
+                RestDocumentationRequestBuilders
+                        .post("/api/v1/admin")
+                        .content(json(testUser))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(bearerToken)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
 }
 
 
