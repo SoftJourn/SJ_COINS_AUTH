@@ -469,13 +469,39 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_example_response_6">Example response</a></li>
 </ul>
 </li>
-    <li><a href="#get-all-admin">Getting all admin users</a>
+</ul>
+</li>
+  <li><a href="#_admin_end_points">Admin end-points</a>
+    <ul class="sectlevel2">
+      <li><a href="#get-all-admin">Getting all admin users</a>
         <ul class="sectlevel3">
-            <li><a href="#_example_request_6">Example request</a></li>
-            <li><a href="#_example_response_7">Example response</a></li>
-            <li><a href="#_response_structure_4">Response structure</a></li>
+          <li><a href="#_example_request_6">Example request</a></li>
+          <li><a href="#_example_response_7">Example response</a></li>
+          <li><a href="#_response_structure_4">Response structure</a></li>
         </ul>
-    </li>
+      </li>
+      <li><a href="#add-new-admin">Add new admin</a>
+        <ul class="sectlevel3">
+          <li><a href="#_example_request_7">Example request</a></li>
+          <li><a href="#_example_response_8">Example response</a></li>
+          <li><a href="#_request_structure">Request structure</a></li>
+          <li><a href="#_response_structure_5">Response structure</a></li>
+        </ul>
+      </li>
+      <li><a href="#update-admin">Update admin</a>
+        <ul class="sectlevel3">
+          <li><a href="#_example_request_8">Example request</a></li>
+          <li><a href="#_example_response_9">Example response</a></li>
+          <li><a href="#_request_structure_2">Request structure</a></li>
+          <li><a href="#_response_structure_6">Response structure</a></li>
+        </ul>
+      </li>
+      <li><a href="#delete-admin">Delete admin</a>
+        <ul class="sectlevel3">
+          <li><a href="#_example_request_9">Example request</a></li>
+          <li><a href="#_example_response_10">Example response</a></li>
+        </ul>
+      </li>
 </ul>
 </li>
 </ul>
@@ -589,7 +615,7 @@ Host: localhost</code></pre>
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 302 Found
 Cache-Control: no-store
-Location: client.redirect.uri#access_token=eyJhbGciOiJSUzI1NiJ9.eyJleHAiOjE0ODM1MDg1MzAsInVzZXJfbmFtZSI6InVzZXIiLCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwianRpIjoiN2IwNGVkNTItNWRhMC00Mzk1LTkxMmEtNzJjMGE2ZjJmMWMxIiwiY2xpZW50X2lkIjoiY2xpZW50Iiwic2NvcGUiOlsicmVhZCIsIndyaXRlIl19.HTaekE7oFawrpifFMt_jNq-hChKLW4nKlTOGjb1k7VvkdWsZCutKTtseS_H-0_Eix2--PaFGjgadczd5Qn7KdPiiv2G88jzMQLsSrkh-IxmhC28tLJC2IYUV1yEEpaQAsIyXQN_FHrGaoq7uChtcgsPZc68zjm5mFU2tmqnFgRLNaBxBlI_jUL-Y0BLdaMchm2gxS1_mPzeB7KR5hl6I9eUFQcsIxhC4OGZbCWdBuNzR1W2YPh170Qbhwfkl8rk1rBMrICckht9oFMaYbbu72KGTWD-Gqy8OjNUnk9HvMH9fy3VK5eaHSSLXIoejZbFVTW0xTmTEz_hIJ4OkJlKi5w&amp;token_type=bearer&amp;expires_in=43199&amp;jti=7b04ed52-5da0-4395-912a-72c0a6f2f1c1</code></pre>
+Location: client.redirect.uri#access_token=eyJhbGciOiJSUzI1NiJ9.eyJleHAiOjE0ODM2NTQ1NDIsInVzZXJfbmFtZSI6InVzZXIiLCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwianRpIjoiYjQ4MTBhZjMtNDMwMS00MjIzLThkNzctMzQyM2JjYjcwMDkxIiwiY2xpZW50X2lkIjoiY2xpZW50Iiwic2NvcGUiOlsicmVhZCIsIndyaXRlIl19.rN2F1TRtjCy0BTATzyoPMT_53jrEAMGjjg_MsyaIpXN5DP9DIHf6X3GMSBD93VxXJv10xWPHjaiX_8u0MyFzBvu5YiPia3j3_PDupNMcsBA5bAS-Ijx6rJg-9WGniioLRhiIbjD9evkKxH66oAGFXGfHP1ku4A5C49ydJ9oRfDr6tnnXZYk2k2ycgXh6htNNx-5ZBB6CJGoYcRrD1Ddpgw-4ebliKPi0V0TMcZ_kmwXq4FPXIYPDrSTSyjeWL1iqAtB2fRRGu-MMCiPQYyOpR9eG0CQaIGmXI0V0QKSw83uQGs2kORsLo47mNufe0hqPyJn6PYKqRE4ZEThQHpbDtQ&amp;token_type=bearer&amp;expires_in=43199&amp;jti=b4810af3-4301-4223-8d77-3423bcb70091</code></pre>
 </div>
 </div>
 </div>
@@ -618,7 +644,7 @@ Host: localhost</code></pre>
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 302 Found
 Cache-Control: no-store
-Location: client.redirect.uri?code=Kq433k</code></pre>
+Location: client.redirect.uri?code=aGSIc7</code></pre>
 </div>
 </div>
 </div>
@@ -699,7 +725,7 @@ Content-Length: 160
   "access_token" : "accessToken",
   "token_type" : "bearer",
   "refresh_token" : "RefreshTokenValue",
-  "expires_in" : -1483464330,
+  "expires_in" : -1483610343,
   "scope" : "read write"
 }</code></pre>
 </div>
@@ -760,7 +786,7 @@ Content-Length: 160
   "access_token" : "accessToken",
   "token_type" : "bearer",
   "refresh_token" : "RefreshTokenValue",
-  "expires_in" : -1483464330,
+  "expires_in" : -1483610342,
   "scope" : "read write"
 }</code></pre>
 </div>
@@ -860,7 +886,7 @@ Content-Length: 160
   "access_token" : "accessToken",
   "token_type" : "bearer",
   "refresh_token" : "RefreshTokenValue",
-  "expires_in" : -1483464330,
+  "expires_in" : -1483610343,
   "scope" : "read write"
 }</code></pre>
 </div>
@@ -921,38 +947,47 @@ Should be used for logout purposes or when refresh token was compromised (became
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /oauth/token/revoke HTTP/1.1
 Content-Type: application/x-www-form-urlencoded
-Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJleHAiOjE0ODM1MDg1MzAsInVzZXJfbmFtZSI6InRlc3QiLCJhdXRob3JpdGllcyI6WyJ0ZXN0Il0sImp0aSI6IjE2NWI5NzNlLTcxMGEtNDI0ZS04NTVkLTdkMTYwYzVkY2NhMiIsImNsaWVudF9pZCI6ImNsaWVudCIsInNjb3BlIjpbXX0.NoSU-Y0ewdG4P92HIw1q3owFAahqhSwnMNrRkqmH-aCk2CCfRbrHFx4mdgNGbGanWglJLVTWootD8iC8-5Ym3ZY_bE2y6OLkuvzYBR9-eudkAK2bykssy3OEi284EbNmp7g1t8gB9vTPqPE_9xlyh0bhmzkYjM23SOYIp18fnH_NCvWBv15yRKNY6Qe5pklNj3dkVPDskoKMQYvuoLsDe5er_OpSUHrlW7eG9_T5YuojUUmqeye8AreLSWjG-TIuzwWwz8wj7uXAAXKcD143xb29AUpFS-l-4WYmlirS3Wrb9zKdq7U2KofkvA-NQohc5SLgdPWBWFcYYOp-Nt6iwA
+Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJleHAiOjE0ODM2NTQ1NDMsInVzZXJfbmFtZSI6InRlc3QiLCJhdXRob3JpdGllcyI6WyJ0ZXN0Il0sImp0aSI6ImNhYWU0OTdjLWVlZGMtNDkzOS05NWY4LTE3NWUyZDE4MGNlYiIsImNsaWVudF9pZCI6ImNsaWVudCIsInNjb3BlIjpbXX0.tv-qqH6fr-bT83SopxVdZrYibA_6ebzCsEW_lEJAQLdQdgVAn82aTeGxM2PQ-Rmj_ZhpD8VJwNWMEvGThEeDRghBbyBUa5ivIfxIIiZX7-yYCEP2ZpL1k63uM3Q5zCrzoH-myV2XoER1zb4tkr6eByrkfOVs4v6Uj9ZnIr9TUh4EHOKiAcFovKSQ4oQudSmC_ALldJwO1KOz9SR1Myxm28qem3ByvJH6vUVHlpm2rdFqkcqU7gUaxIUZvJdPHLARV1BwZumqznyBAexj235-QCDwCnxkubN9vI6v4OP2slG8Ta1GNm0q5jJStP_YWnZUGqWW0QJ841kJL-uLSsQD2Q
 Host: localhost
 
-token_value=eyJhbGciOiJSUzI1NiJ9.eyJ1c2VyX25hbWUiOiJ0ZXN0Iiwic2NvcGUiOltdLCJhdGkiOiIxNjViOTczZS03MTBhLTQyNGUtODU1ZC03ZDE2MGM1ZGNjYTIiLCJleHAiOjE0ODYwNTczMzAsImF1dGhvcml0aWVzIjpbInRlc3QiXSwianRpIjoiMWExNjFkMzMtNTUzMC00MWRlLWEzZDYtNzVhOGI5MjdkMzY5IiwiY2xpZW50X2lkIjoiY2xpZW50In0.lF_ta8B0Z4nzSfsr4waBFsBI8nDYK2IOrIa9dM1czjcR-A8Yej5l4wkUQ1gVxZ-NSLKd97bMv0YzOIt0dp9BojUbAI1qHuS2JwEB9J4MKJKBzIxxTjN75MGfnsPQcKJ3f3DuyBzey9vtlDybTx351C4EUjobAeNzPPNKmVz9v6HKR4tvUHBMIkNooo92mGIvGEHTNrhBkYZ0Iu2kmVWRqUjRiGwxQeZL6O9nsX_GJGkwEYOkIQGYuiSnApBP6IRB97a_xhCLbL32gn7bJvN9QKWVOhRFMWOuHpt1bWT_nEoZT50ROKHVKIUC9IBo4dpvpVn5wanDdKBVuOykfdWFKQ</code></pre>
+token_value=eyJhbGciOiJSUzI1NiJ9.eyJ1c2VyX25hbWUiOiJ0ZXN0Iiwic2NvcGUiOltdLCJhdGkiOiJjYWFlNDk3Yy1lZWRjLTQ5MzktOTVmOC0xNzVlMmQxODBjZWIiLCJleHAiOjE0ODYyMDMzNDMsImF1dGhvcml0aWVzIjpbInRlc3QiXSwianRpIjoiZDA4YjFjODQtN2E5Ni00NzJmLWJlYTMtMzZmMTY3MzljN2YxIiwiY2xpZW50X2lkIjoiY2xpZW50In0.l0loICQ3zWZjgu2CpZVYT4Wfi6KoRIMWgHkthJB9q0n5p4maW3R8a92KEDMp8GLt8UcYNnOBGh2R3uAqLZ4FAZit-Y7q7cXUIm85xnNOEiUYLNd-YIbbqC7WypNTB0BXZVE0P9yHoVNbJyTlHAm4DUYKJ3G4J_QghZB7Z4qnivhE3uGiEkN-ZnYDSJJfDgTGYWOpUttU-H5Lkc_NfrTB77NvZ97dAyjzHAI-y1OFtISfFhqzuzBDsscorAwBRYgUKnAVTJmY0Z_Jd16Oy8oFjSwAOgjhIljParn8P8S5LGcbTivG43PpgAdewfwu9cabFtteoYKWTZ6TEuohPrcU7Q</code></pre>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_example_response_6"><a class="link" href="#_example_response_6">Example response</a></h4>
 <div class="listingblock">
 <div class="content">
-    <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 204 No Content</code></pre>
+  <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 204 No Content</code></pre>
 </div>
 </div>
 </div>
 </div>
-    <div class="sect2">
+</div>
+</div>
+  <div class="sect1">
+    <h2 id="_admin_end_points"><a class="link" href="#_admin_end_points">Admin end-points</a></h2>
+    <div class="sectionbody">
+      <div class="paragraph">
+        <p>These operation can be done by SUPER_ADMIN and USER_MANAGER.
+          SUPER_ADMIN users creates only with application start and can not be altered.</p>
+      </div>
+      <div class="sect2">
         <h3 id="get-all-admin"><a class="link" href="#get-all-admin">Getting all admin users</a></h3>
         <div class="sect3">
-            <h4 id="_example_request_6"><a class="link" href="#_example_request_6">Example request</a></h4>
-            <div class="listingblock">
-                <div class="content">
+          <h4 id="_example_request_6"><a class="link" href="#_example_request_6">Example request</a></h4>
+          <div class="listingblock">
+            <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/admin HTTP/1.1
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJleHAiOjE0ODM1MDg1MzMsInVzZXJfbmFtZSI6InRlc3QiLCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVJfTUFOQUdFUiJdLCJqdGkiOiI3MTcwNTFlMC1kZjgwLTQwMGYtYWQyYy1hNGEzOWRlOGUzOWMiLCJjbGllbnRfaWQiOiJjbGllbnQiLCJzY29wZSI6W119.nw1rPggd9ls1K2e3r8AxqHQ0okwFm_FRzYmN4n-Jc33h5dPupovnS2I85w3wbID6M2otBF4ir1UCSsax2XZ1hJ4K9CiV5htZ1tpHn0K0hjJfPMeGMUtUgrjZAaAkzNlfGt-5vtJsNjfCwMziY__nVztG0XBJ8CIMMcSxkpj90Qj-bnFfe-_1L0oL-ZUoumNLjqoBZbOcK-qEgSrVnifM4FzH4ui1mv1Z7S7-rSOVJBV5GXPWj8Lfbd9gTuaMLZo_CSjkR-4nvshMb6kV9mQWIJI3fmFfNKFotXP6Pfblvi3CfJNN9woNfpqkR6J7z8l5ZUr7uu5tTeonizsKdPyjMw
+Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJleHAiOjE0ODM2NTQ1NDYsInVzZXJfbmFtZSI6InRlc3QiLCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVJfTUFOQUdFUiJdLCJqdGkiOiI1N2NiMmIyNi1iNDg1LTRhMDEtODlhNi1kNGRiMTE4YjcyMDgiLCJjbGllbnRfaWQiOiJjbGllbnQiLCJzY29wZSI6W119.Iodhvobb15jzrZoJR1yuO35Qo8RTRvG9_CLMQHAZqtrXMgjGorW1n-8EwKEFkgOoRQTrNrWCMeWuykXiLJufOpkkstjhG6hsM3CVtxyaje84_D7QEuCM5ikEYOaOJp09B5cj54xw7cZB7Im_R6kw4K66qKof0iN6HqM_iH5J87T3qChg2Wc-4W71zdATdom36_z26j0o5gV2pUWT64-XRURnkJlvwJp_gOmrs795GJnqWtdGFk6h0exbaTx_BBto9YlfvRinK4WOX4K2fioKo1zeI3Iwg8TiWwtf221jq-7QpMXRgp62x17CXpIaeqmZMAuObTogWZLMbkUUFVs_MQ
 Host: localhost</code></pre>
-                </div>
             </div>
+          </div>
         </div>
         <div class="sect3">
-            <h4 id="_example_response_7"><a class="link" href="#_example_response_7">Example response</a></h4>
-            <div class="listingblock">
-                <div class="content">
+          <h4 id="_example_response_7"><a class="link" href="#_example_response_7">Example response</a></h4>
+          <div class="listingblock">
+            <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
 X-Content-Type-Options: nosniff
@@ -972,77 +1007,276 @@ Content-Length: 171
     "superRole" : false
   } ]
 } ]</code></pre>
-                </div>
             </div>
+          </div>
         </div>
         <div class="sect3">
-            <h4 id="_response_structure_4"><a class="link" href="#_response_structure_4">Response structure</a></h4>
-            <table class="tableblock frame-all grid-all spread">
-                <colgroup>
-                    <col style="width: 33%;">
-                    <col style="width: 33%;">
-                    <col style="width: 33%;">
-                </colgroup>
-                <thead>
-                <tr>
-                    <th class="tableblock halign-left valign-top">Path</th>
-                    <th class="tableblock halign-left valign-top">Type</th>
-                    <th class="tableblock halign-left valign-top">Description</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>[]</code></p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock">An array of users</p></td>
-                </tr>
-                <tr>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>[].ldapId</code></p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock">vpupkin</p></td>
-                </tr>
-                <tr>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>[].fullName</code></p>
-                    </td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock">Vasuliy Pupkin</p></td>
-                </tr>
-                <tr>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>[].email</code></p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><a
-                            href="mailto:vpupkin@softjoun.com">vpupkin@softjoun.com</a></p></td>
-                </tr>
-                <tr>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>[].authorities</code></p>
-                    </td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock">ROLE_ADMIN</p></td>
-                </tr>
-                <tr>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>[].authorities.[].authority</code>
-                    </p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock">Role name with prefix
-                        'ROLE_'</p></td>
-                </tr>
-                <tr>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>[].authorities.[].superRole</code>
-                    </p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock">Bool value. Is this role super
-                        role?</p></td>
-                </tr>
-                </tbody>
-            </table>
+          <h4 id="_response_structure_4"><a class="link" href="#_response_structure_4">Response structure</a></h4>
+          <table class="tableblock frame-all grid-all spread">
+            <colgroup>
+              <col style="width: 33%;">
+              <col style="width: 33%;">
+              <col style="width: 33%;">
+            </colgroup>
+            <thead>
+            <tr>
+              <th class="tableblock halign-left valign-top">Path</th>
+              <th class="tableblock halign-left valign-top">Type</th>
+              <th class="tableblock halign-left valign-top">Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td class="tableblock halign-left valign-top"><p class="tableblock"><code>[]</code></p></td>
+              <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
+              <td class="tableblock halign-left valign-top"><p class="tableblock">An array of users</p></td>
+            </tr>
+            <tr>
+              <td class="tableblock halign-left valign-top"><p class="tableblock"><code>[].ldapId</code></p></td>
+              <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+              <td class="tableblock halign-left valign-top"><p class="tableblock">vpupkin</p></td>
+            </tr>
+            <tr>
+              <td class="tableblock halign-left valign-top"><p class="tableblock"><code>[].fullName</code></p></td>
+              <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+              <td class="tableblock halign-left valign-top"><p class="tableblock">Vasuliy Pupkin</p></td>
+            </tr>
+            <tr>
+              <td class="tableblock halign-left valign-top"><p class="tableblock"><code>[].email</code></p></td>
+              <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+              <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="mailto:vpupkin@softjoun.com">vpupkin@softjoun.com</a>
+              </p></td>
+            </tr>
+            <tr>
+              <td class="tableblock halign-left valign-top"><p class="tableblock"><code>[].authorities</code></p></td>
+              <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+              <td class="tableblock halign-left valign-top"><p class="tableblock">ROLE_ADMIN</p></td>
+            </tr>
+            <tr>
+              <td class="tableblock halign-left valign-top"><p class="tableblock">
+                <code>[].authorities.[].authority</code></p></td>
+              <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+              <td class="tableblock halign-left valign-top"><p class="tableblock">Role name with prefix 'ROLE_'</p></td>
+            </tr>
+            <tr>
+              <td class="tableblock halign-left valign-top"><p class="tableblock">
+                <code>[].authorities.[].superRole</code></p></td>
+              <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+              <td class="tableblock halign-left valign-top"><p class="tableblock">Bool value. Is this role super
+                role?</p></td>
+            </tr>
+            </tbody>
+          </table>
         </div>
-    </div>
+      </div>
+      <div class="sect2">
+        <h3 id="add-new-admin"><a class="link" href="#add-new-admin">Add new admin</a></h3>
+        <div class="sect3">
+          <h4 id="_example_request_7"><a class="link" href="#_example_request_7">Example request</a></h4>
+          <div class="listingblock">
+            <div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/v1/admin HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJleHAiOjE0ODM2NTQ1NDYsInVzZXJfbmFtZSI6InRlc3QiLCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVJfTUFOQUdFUiJdLCJqdGkiOiJmYjNmN2VmZS1hOTBmLTRjNDktYWE2OC02ZTA4Y2Q2ZDAyMmUiLCJjbGllbnRfaWQiOiJjbGllbnQiLCJzY29wZSI6W119.rzA7ODf3X-RSorw6SfuJkB3z0CHrG7cAp4MFCaNDKsPU5aCdWVhSpgiF43KrX-ourBWJULvH-osNiC-8neR4b5Hxbr0zluG3TSz7caCmkK9JZXqfWvUJuUnEAFtudZFN5ggyEvEMHilAlKuMOZ1_w_Dqcx3RKV-Tp-wVvgebFN3fLOu38bnSKodkR-XIkt8sbvO-7lMJeMbHvJ3Gjn6Ht3hGpyNnY0k2omUEfuboFsTeRyPwCk4KbAzZ23HNgcM_jwhMaUawAhFL9B2wyq4U5rqJ7JhGZNaYsqBpN3pNyeWTkMHYV7JdeYySmTiRyHJcz7ZJ6T5ps6aonIaTjzkJLQ
+Host: localhost
+Content-Length: 167
+
+{
+  "ldapId" : "ldap_test",
+  "fullName" : "full_name",
+  "email" : "email@email",
+  "authorities" : [ {
+    "authority" : "ROLE_TEST",
+    "superRole" : false
+  } ]
+}</code></pre>
+            </div>
+          </div>
+        </div>
+        <div class="sect3">
+          <h4 id="_example_response_8"><a class="link" href="#_example_response_8">Example response</a></h4>
+          <div class="listingblock">
+            <div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 167
+
+{
+  "ldapId" : "ldap_test",
+  "fullName" : "full_name",
+  "email" : "email@email",
+  "authorities" : [ {
+    "authority" : "ROLE_TEST",
+    "superRole" : false
+  } ]
+}</code></pre>
+            </div>
+          </div>
+        </div>
+        <div class="sect3">
+          <h4 id="_request_structure"><a class="link" href="#_request_structure">Request structure</a></h4>
+          <table class="tableblock frame-all grid-all spread">
+            <colgroup>
+              <col style="width: 33%;">
+              <col style="width: 33%;">
+              <col style="width: 33%;">
+            </colgroup>
+            <thead>
+            <tr>
+              <th class="tableblock halign-left valign-top">Path</th>
+              <th class="tableblock halign-left valign-top">Type</th>
+              <th class="tableblock halign-left valign-top">Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ldapId</code></p></td>
+              <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+              <td class="tableblock halign-left valign-top"><p class="tableblock">vpupkin</p></td>
+            </tr>
+            <tr>
+              <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fullName</code></p></td>
+              <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+              <td class="tableblock halign-left valign-top"><p class="tableblock">Vasuliy Pupkin</p></td>
+            </tr>
+            <tr>
+              <td class="tableblock halign-left valign-top"><p class="tableblock"><code>email</code></p></td>
+              <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+              <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="mailto:vpupkin@softjoun.com">vpupkin@softjoun.com</a>
+              </p></td>
+            </tr>
+            <tr>
+              <td class="tableblock halign-left valign-top"><p class="tableblock"><code>authorities</code></p></td>
+              <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+              <td class="tableblock halign-left valign-top"><p class="tableblock">ROLE_ADMIN</p></td>
+            </tr>
+            <tr>
+              <td class="tableblock halign-left valign-top"><p class="tableblock"><code>authorities.[].authority</code>
+              </p></td>
+              <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+              <td class="tableblock halign-left valign-top"><p class="tableblock">Role name with prefix 'ROLE_'</p></td>
+            </tr>
+            <tr>
+              <td class="tableblock halign-left valign-top"><p class="tableblock"><code>authorities.[].superRole</code>
+              </p></td>
+              <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+              <td class="tableblock halign-left valign-top"><p class="tableblock">Bool value. Is this role super
+                role?</p></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="sect3">
+          <h4 id="_response_structure_5"><a class="link" href="#_response_structure_5">Response structure</a></h4>
+          <div class="paragraph">
+            <p>Response structure is the same as request if user successfully was added.</p>
+          </div>
+        </div>
+      </div>
+      <div class="sect2">
+        <h3 id="update-admin"><a class="link" href="#update-admin">Update admin</a></h3>
+        <div class="sect3">
+          <h4 id="_example_request_8"><a class="link" href="#_example_request_8">Example request</a></h4>
+          <div class="listingblock">
+            <div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/v1/admin HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJleHAiOjE0ODM2NTQ1NDYsInVzZXJfbmFtZSI6InRlc3QiLCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVJfTUFOQUdFUiJdLCJqdGkiOiIxMTc1ODAwYi1hNjYxLTQwNTEtYmJmNS0yOWRlODhlMTI5MjkiLCJjbGllbnRfaWQiOiJjbGllbnQiLCJzY29wZSI6W119.KM0UXsRsDIacPOeENabvOajhccNIyrLioiZWtOEO8ZWWARSzQjjKBu3Jd1uaMC6mvyMR5E_aRCYi8peGFdTBJOzOYudCNzBrLkd5hG1enVTicn4l9c3OYPR4kO-wg9VXnf2QyLcntSrY_AtOC4d4ggdUJ7aRA-oefE13cT21wzVKDbzM91hs2BKJQxMILq0vWjQc9ex1d-Lrn1Fm1DXsrAMViL-u_-pHmPgF20cx55m87bm7ib60zuRkmUc7mfvZPjVoZlW6WN4PhRMPqWFDJcOTTNPduWIIO6b6JI7yRVPOfAw61DFtU_vJMk_R0oCzfVrDhCNrC3HY5592PDIuuA
+Host: localhost
+Content-Length: 167
+
+{
+  "ldapId" : "ldap_test",
+  "fullName" : "full_name",
+  "email" : "email@email",
+  "authorities" : [ {
+    "authority" : "ROLE_TEST",
+    "superRole" : false
+  } ]
+}</code></pre>
+            </div>
+          </div>
+        </div>
+        <div class="sect3">
+          <h4 id="_example_response_9"><a class="link" href="#_example_response_9">Example response</a></h4>
+          <div class="listingblock">
+            <div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 167
+
+{
+  "ldapId" : "ldap_test",
+  "fullName" : "full_name",
+  "email" : "email@email",
+  "authorities" : [ {
+    "authority" : "ROLE_TEST",
+    "superRole" : false
+  } ]
+}</code></pre>
+            </div>
+          </div>
+        </div>
+        <div class="sect3">
+          <h4 id="_request_structure_2"><a class="link" href="#_request_structure_2">Request structure</a></h4>
+          <div class="paragraph">
+            <p>The same as add new admin</p>
+          </div>
+        </div>
+        <div class="sect3">
+          <h4 id="_response_structure_6"><a class="link" href="#_response_structure_6">Response structure</a></h4>
+          <div class="paragraph">
+            <p>The same as add new admin</p>
+          </div>
+        </div>
+      </div>
+      <div class="sect2">
+        <h3 id="delete-admin"><a class="link" href="#delete-admin">Delete admin</a></h3>
+        <div class="sect3">
+          <h4 id="_example_request_9"><a class="link" href="#_example_request_9">Example request</a></h4>
+          <div class="listingblock">
+            <div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /api/v1/admin/ldap_test HTTP/1.1
+Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJleHAiOjE0ODM2NTQ1NDYsInVzZXJfbmFtZSI6InRlc3QiLCJhdXRob3JpdGllcyI6WyJST0xFX1NVUEVSX0FETUlOIl0sImp0aSI6Ijk0NWEwNmRlLWFhYzctNGRkYi1iMjE0LTMxNjg1OGM4YmE5YSIsImNsaWVudF9pZCI6ImNsaWVudCIsInNjb3BlIjpbXX0.Kad1MQoawR5XFHoHde7QhQpxen_hEsmyb1FKY9BLtkMrsQZ_yUtbUXMwLIEmGNGREHneQT1q8oOXjFMUiKCGVXF3zXjyH43b1MYV2VmS7YhrocCe7yXhc1xtgQ-ntg9cgw2KbimnFm4knqIZv6M3a6R9D0xdiZluukUvBCZjLkRbGmgi7ieAgvo1h8XeCGI4eiyBEae0XNqCNuiVLrty-3r8qD6dUOxtcRKD1rDtMdK6CEbdDWyxSAyu2eycBL5XohbKa7pqR1ve03Fb-UK5DEwG-zde85-gw2eRLuZxeYfpou6Hvx9bGKkzxCWkccKv0zW06b8raJpLi8hzdZ4U_g
+Host: localhost</code></pre>
+            </div>
+          </div>
+        </div>
+        <div class="sect3">
+          <h4 id="_example_response_10"><a class="link" href="#_example_response_10">Example response</a></h4>
+          <div class="listingblock">
+            <div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-    Last updated 2017-01-03 19:41:59 EET
+  Last updated 2017-01-05 12:13:26 EET
 </div>
 </div>
 </body>

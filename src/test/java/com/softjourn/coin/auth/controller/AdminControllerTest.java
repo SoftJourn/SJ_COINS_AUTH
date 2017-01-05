@@ -30,10 +30,8 @@ import java.util.HashSet;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -158,8 +156,10 @@ public class AdminControllerTest {
                         .with(bearerToken)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andDo(document("add_new_admin", preprocessResponse(prettyPrint())
-                        , responseFields(user).andWithPrefix("authorities.[].", role)));
+                .andDo(document("add_new_admin"
+                        , preprocessRequest(prettyPrint())
+                        , preprocessResponse(prettyPrint())
+                        , requestFields(user).andWithPrefix("authorities.[].", role)));
     }
 
     @Test
@@ -222,7 +222,11 @@ public class AdminControllerTest {
                 .with(bearerToken)
                 .accept(MediaType.APPLICATION_JSON)
         )
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("update_admin"
+                        , preprocessRequest(prettyPrint())
+                        , preprocessResponse(prettyPrint())
+                        , requestFields(user).andWithPrefix("authorities.[].", role)));
     }
 
     @Test
@@ -258,7 +262,10 @@ public class AdminControllerTest {
                 .delete("/api/v1/admin/" + testUser.getLdapId())
                 .with(bearerToken)
         )
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("delete_admin"
+                        , preprocessRequest(prettyPrint())
+                        , preprocessResponse(prettyPrint())));
     }
 
     @Test
