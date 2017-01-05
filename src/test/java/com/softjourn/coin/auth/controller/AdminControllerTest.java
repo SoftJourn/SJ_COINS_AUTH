@@ -34,7 +34,6 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -249,7 +248,7 @@ public class AdminControllerTest {
                 .with(bearerToken)
                 .accept(MediaType.APPLICATION_JSON)
         )
-                .andExpect(status().isNotFound()).andDo(print());
+                .andExpect(status().isNotFound());
     }
 
     @Test

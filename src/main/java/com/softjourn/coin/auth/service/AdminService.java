@@ -125,7 +125,9 @@ public class AdminService {
             if (user.getAuthorities() == null || user.getAuthorities().isEmpty())
                 throw new IllegalArgumentException("Authorities are empty");
             if (!isAdmin(user))
-                throw new NoSuchUserException("User is not admin");
+                throw new NoSuchUserException(user.getLdapId());
+            if (isSuper(user.getLdapId()) || isSuper(user))
+                throw new IllegalArgumentException("Super role can not be changed or granted");
             //TODO find out why userRepository.save calls remove method from setAuthority HashSet
             //TEST method update_testUserWithWrongName_LDAPNotFoundException
             user.setAuthorities(new HashSet<>(user.getAuthorities()));

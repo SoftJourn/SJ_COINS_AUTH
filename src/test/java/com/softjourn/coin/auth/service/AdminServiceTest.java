@@ -56,6 +56,7 @@ public class AdminServiceTest {
     @Value("${super.admins}")
     private String[] superUsers;
     private User testSuperUser;
+    private User testSuperUserInDB;
 
     @Before
     public void init() throws ConfigurationException {
@@ -66,6 +67,8 @@ public class AdminServiceTest {
     @Before
     public void setUpSuperUsers() throws ConfigurationException {
         this.testSuperUser = new User("new_super_user", "full_name", "email@email"
+                , Collections.singleton(new Role(superRoles[0], true)));
+        this.testSuperUserInDB = new User(superUsers[0], "FULL NAME", "EMAIL@email"
                 , Collections.singleton(new Role(superRoles[0], true)));
     }
 
@@ -78,6 +81,7 @@ public class AdminServiceTest {
         this.roleService.add(testRole);
 
         //legal test user ldap
+        when(ldapService.userExist(testSuperUserInDB)).thenReturn(true);
         when(ldapService.userExist(testUser)).thenReturn(true);
         when(ldapService.userExist(testSuperUser)).thenReturn(true);
 
@@ -211,6 +215,21 @@ public class AdminServiceTest {
 
     @Test(expected = NoSuchUserException.class)
     public void update_TestUserNotAdmin_NoSuchUserException() throws Exception {
+        adminService.update(testUser);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void update_SuperUser_Exception() throws Exception {
+        assertEquals(adminService.find(testSuperUserInDB.getLdapId()), testSuperUserInDB);
+        testSuperUserInDB.setAuthorities(Collections.singleton(testRole));
+        adminService.update(testSuperUserInDB);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void update_testUserWithSuperRole_Exception() throws Exception {
+        assertEquals(adminService.add(testUser), testUser);
+        assertEquals(adminService.find(testUser.getLdapId()), testUser);
+        testUser.setAuthorities(Collections.singleton(new Role(superRoles[0], true)));
         adminService.update(testUser);
     }
 }
