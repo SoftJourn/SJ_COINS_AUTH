@@ -52,7 +52,10 @@ public class AuthConfiguration {
         private final ClientDetailsService clientDetailsService;
 
         @Autowired
-        public AuthServerConfig(UserDetailsService userDetailsService, DataSource dataSource, ClientDetailsService clientDetailsService, JwtAccessTokenConverter jwtAccessTokenConverter, AuthenticationProvider authenticationProvider, TokenStore tokenStore) {
+        public AuthServerConfig(UserDetailsService userDetailsService
+                , @SuppressWarnings("SpringJavaAutowiringInspection") DataSource dataSource
+                , ClientDetailsService clientDetailsService, JwtAccessTokenConverter jwtAccessTokenConverter
+                , AuthenticationProvider authenticationProvider, TokenStore tokenStore) {
             this.userDetailsService = userDetailsService;
             this.dataSource = dataSource;
             this.clientDetailsService = clientDetailsService;
@@ -144,7 +147,7 @@ public class AuthConfiguration {
                     .authorizeRequests()
                     .antMatchers("/login").permitAll()
                     .antMatchers("/api/v1/admin/**").hasAnyRole("SUPER_ADMIN", "USER_MANAGER")
-                    .antMatchers("/api/v1/users/**").hasAnyRole("APPLICATION")
+                    .antMatchers("/api/v1/users/**").authenticated()
                     .antMatchers("/oauth/token/revoke").authenticated()
                     .anyRequest().authenticated()
 
