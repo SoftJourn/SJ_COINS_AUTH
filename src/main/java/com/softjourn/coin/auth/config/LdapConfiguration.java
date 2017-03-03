@@ -3,11 +3,12 @@ package com.softjourn.coin.auth.config;
 
 import com.softjourn.coin.auth.entity.User;
 import com.softjourn.coin.auth.ldap.LdapAuthoritiesPopulationBean;
-import com.softjourn.coin.auth.service.LdapService;
+import com.softjourn.coin.auth.service.ILdapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -47,8 +48,9 @@ public class LdapConfiguration {
     }
 
     @Bean
+    @Profile({"prod", "dev", "test"})
     @Autowired
-    public UserDetailsService userDetailsService(LdapService ldapService, LdapAuthoritiesPopulationBean ldapAuthoritiesPopulationBean) {
+    public UserDetailsService userDetailsService(ILdapService ldapService, LdapAuthoritiesPopulationBean ldapAuthoritiesPopulationBean) {
         return ldapLogin -> {
             User user = ldapService.getUser(ldapLogin);
             return new org.springframework.security.core.userdetails.User(
