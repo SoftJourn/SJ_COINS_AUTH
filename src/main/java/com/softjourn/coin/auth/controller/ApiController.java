@@ -21,7 +21,7 @@ public class ApiController {
         this.ldapService = ldapService;
     }
 
-    @RequestMapping(value = "/{ldapId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{ldapId:.+}", method = RequestMethod.GET)
     public User userExist(@PathVariable final String ldapId) {
         return ldapService.getUser(ldapId);
     }
