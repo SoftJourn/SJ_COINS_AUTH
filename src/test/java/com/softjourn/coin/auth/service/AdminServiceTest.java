@@ -47,7 +47,7 @@ public class AdminServiceTest {
     @SuppressWarnings("SpringJavaAutowiringInspection")
     private UserRepository userRepository;
     @Mock
-    private LdapService ldapService;
+    private ILdapService ldapService;
 
     @Autowired
     private RoleService roleService;

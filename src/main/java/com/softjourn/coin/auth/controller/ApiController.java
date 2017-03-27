@@ -1,7 +1,7 @@
 package com.softjourn.coin.auth.controller;
 
 import com.softjourn.coin.auth.entity.User;
-import com.softjourn.coin.auth.service.LdapService;
+import com.softjourn.coin.auth.service.ILdapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,14 +14,14 @@ import java.util.List;
 @RequestMapping("/v1/users")
 public class ApiController {
 
-    private final LdapService ldapService;
+    private final ILdapService ldapService;
 
     @Autowired
-    public ApiController(LdapService ldapService) {
+    public ApiController(ILdapService ldapService) {
         this.ldapService = ldapService;
     }
 
-    @RequestMapping(value = "/{ldapId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{ldapId:.+}", method = RequestMethod.GET)
     public User userExist(@PathVariable final String ldapId) {
         return ldapService.getUser(ldapId);
     }

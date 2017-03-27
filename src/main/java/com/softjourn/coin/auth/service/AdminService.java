@@ -22,13 +22,13 @@ import java.util.Set;
 public class AdminService {
 
     private UserRepository userRepository;
-    private LdapService ldapService;
+    private ILdapService ldapService;
 
 
     @Autowired
-    public AdminService(UserRepository userRepository, LdapService ldapService
-            , @Value("${super.admins}") String[] superAdmins
-            , @Value("${super.roles}") String[] superRoles) throws ConfigurationException {
+    public AdminService(UserRepository userRepository, ILdapService ldapService,
+                        @Value("${super.admins}") String[] superAdmins,
+                        @Value("${super.roles}") String[] superRoles) throws ConfigurationException {
         this.userRepository = userRepository;
         this.ldapService = ldapService;
         this.removeSuperUsers(superRoles);

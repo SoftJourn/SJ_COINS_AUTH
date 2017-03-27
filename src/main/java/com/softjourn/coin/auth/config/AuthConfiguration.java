@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -30,6 +30,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
 import javax.sql.DataSource;
+import java.net.MalformedURLException;
 import java.security.KeyPair;
 
 @Configuration
@@ -68,10 +69,10 @@ public class AuthConfiguration {
         public static JwtAccessTokenConverter jwtAccessTokenConverter(@Value("${authKeyFileName}") String authKeyFileName,
                                                                       @Value("${authKeyStorePass}") String authKeyStorePass,
                                                                       @Value("${authKeyMasterPass}") String authKeyMasterPass,
-                                                                      @Value("${authKeyAlias}") String authKeyAlias) {
+                                                                      @Value("${authKeyAlias}") String authKeyAlias) throws MalformedURLException {
             JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
             KeyPair keyPair = new KeyStoreKeyFactory(
-                    new ClassPathResource(authKeyFileName), authKeyStorePass.toCharArray())
+                    new UrlResource("file:" + authKeyFileName), authKeyStorePass.toCharArray())
                     .getKeyPair(authKeyAlias, authKeyMasterPass.toCharArray());
             converter.setKeyPair(keyPair);
             return converter;
