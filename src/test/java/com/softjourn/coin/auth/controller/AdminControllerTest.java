@@ -98,7 +98,7 @@ public class AdminControllerTest {
     public void getAll_WithoutRole_UnauthorizedRequest() throws Exception {
         mvc.perform(
                 RestDocumentationRequestBuilders
-                        .get("/api/v1/admin")
+                        .get("/v1/admin")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
     }
@@ -109,7 +109,7 @@ public class AdminControllerTest {
 
         mvc.perform(
                 RestDocumentationRequestBuilders
-                        .get("/api/v1/admin")
+                        .get("/v1/admin")
                         .with(bearerToken)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
@@ -121,7 +121,7 @@ public class AdminControllerTest {
 
         mvc.perform(
                 RestDocumentationRequestBuilders
-                        .get("/api/v1/admin")
+                        .get("/v1/admin")
                         .with(bearerToken)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -134,7 +134,7 @@ public class AdminControllerTest {
 
         mvc.perform(
                 RestDocumentationRequestBuilders
-                        .get("/api/v1/admin")
+                        .get("/v1/admin")
                         .with(bearerToken)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -150,7 +150,7 @@ public class AdminControllerTest {
         RequestPostProcessor bearerToken = authHelper.withUser("test", "ROLE_USER_MANAGER");
         mvc.perform(
                 RestDocumentationRequestBuilders
-                        .post("/api/v1/admin")
+                        .post("/v1/admin")
                         .content(json(testUser))
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(bearerToken)
@@ -167,7 +167,7 @@ public class AdminControllerTest {
         RequestPostProcessor bearerToken = authHelper.withUser("test", "ROLE_SUPER_ADMIN");
         mvc.perform(
                 RestDocumentationRequestBuilders
-                        .post("/api/v1/admin")
+                        .post("/v1/admin")
                         .content(json(testUser))
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(bearerToken)
@@ -179,7 +179,7 @@ public class AdminControllerTest {
     public void addNewAdmin_testUserWithoutToken_Unauthorized() throws Exception {
         mvc.perform(
                 RestDocumentationRequestBuilders
-                        .post("/api/v1/admin")
+                        .post("/v1/admin")
                         .content(json(testUser))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -190,7 +190,7 @@ public class AdminControllerTest {
     public void addNewAdmin_testUserWithRoleUser_Forbidden() throws Exception {
         RequestPostProcessor bearerToken = authHelper.withUser("test", "ROLE_USER");
         mvc.perform(RestDocumentationRequestBuilders
-                .post("/api/v1/admin")
+                .post("/v1/admin")
                 .content(json(testUser))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(bearerToken)
@@ -203,7 +203,7 @@ public class AdminControllerTest {
     public void updateAdmin_testUserWithRoleSuperAdmin_testUser() throws Exception {
         RequestPostProcessor bearerToken = authHelper.withUser("test", "ROLE_SUPER_ADMIN");
         mvc.perform(RestDocumentationRequestBuilders
-                .post("/api/v1/admin")
+                .post("/v1/admin")
                 .content(json(testUser))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(bearerToken)
@@ -216,7 +216,7 @@ public class AdminControllerTest {
     public void updateAdmin_testUserWithRoleUserManager_testUser() throws Exception {
         RequestPostProcessor bearerToken = authHelper.withUser("test", "ROLE_USER_MANAGER");
         mvc.perform(RestDocumentationRequestBuilders
-                .post("/api/v1/admin")
+                .post("/v1/admin")
                 .content(json(testUser))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(bearerToken)
@@ -233,7 +233,7 @@ public class AdminControllerTest {
     public void updateAdmin_testUserWithRoleUser_Forbidden() throws Exception {
         RequestPostProcessor bearerToken = authHelper.withUser("test", "ROLE_USER");
         mvc.perform(RestDocumentationRequestBuilders
-                .post("/api/v1/admin")
+                .post("/v1/admin")
                 .content(json(testUser))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(bearerToken)
@@ -246,7 +246,7 @@ public class AdminControllerTest {
     public void updateAdmin_testUserNotAdmin_HttpStatusNotFound() throws Exception {
         RequestPostProcessor bearerToken = authHelper.withUser("test", "ROLE_SUPER_ADMIN");
         mvc.perform(RestDocumentationRequestBuilders
-                .post("/api/v1/admin/" + testUserNotAdmin.getLdapId())
+                .post("/v1/admin/" + testUserNotAdmin.getLdapId())
                 .content(json(testUserNotAdmin))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(bearerToken)
@@ -259,7 +259,7 @@ public class AdminControllerTest {
     public void delete_testUserWithRoleSuperAdmin_testUser() throws Exception {
         RequestPostProcessor bearerToken = authHelper.withUser("test", "ROLE_SUPER_ADMIN");
         mvc.perform(RestDocumentationRequestBuilders
-                .delete("/api/v1/admin/" + testUser.getLdapId())
+                .delete("/v1/admin/" + testUser.getLdapId())
                 .with(bearerToken)
         )
                 .andExpect(status().isOk())
@@ -272,7 +272,7 @@ public class AdminControllerTest {
     public void delete_testUserWithRoleUserManager_testUser() throws Exception {
         RequestPostProcessor bearerToken = authHelper.withUser("test", "ROLE_USER_MANAGER");
         mvc.perform(RestDocumentationRequestBuilders
-                .delete("/api/v1/admin/" + testUser.getLdapId())
+                .delete("/v1/admin/" + testUser.getLdapId())
                 .with(bearerToken)
         )
                 .andExpect(status().isOk());
@@ -282,7 +282,7 @@ public class AdminControllerTest {
     public void delete_testUserWithRoleUser_Forbidden() throws Exception {
         RequestPostProcessor bearerToken = authHelper.withUser("test", "ROLE_USER");
         mvc.perform(RestDocumentationRequestBuilders
-                .delete("/api/v1/admin/" + testUser.getLdapId())
+                .delete("/v1/admin/" + testUser.getLdapId())
                 .with(bearerToken)
         )
                 .andExpect(status().isForbidden());

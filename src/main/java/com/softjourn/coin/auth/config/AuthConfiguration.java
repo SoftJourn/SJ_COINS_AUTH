@@ -146,8 +146,8 @@ public class AuthConfiguration {
             http
                     .authorizeRequests()
                     .antMatchers("/login").permitAll()
-                    .antMatchers("/api/v1/admin/**").hasAnyRole("SUPER_ADMIN", "USER_MANAGER")
-                    .antMatchers("/api/v1/users/**").authenticated()
+                    .antMatchers("/v1/admin/**").hasAnyRole("SUPER_ADMIN", "USER_MANAGER")
+                    .antMatchers("/v1/users/**").authenticated()
                     .antMatchers("/oauth/token/revoke").authenticated()
                     .anyRequest().authenticated()
 

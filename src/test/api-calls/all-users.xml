@@ -4,7 +4,7 @@
     </option>
     <option name="httpMethod" value="GET"/>
     <option name="urlBase" value="http://localhost:8111"/>
-    <option name="urlPath" value="/api/v1/users"/>
+    <option name="urlPath" value="/v1/users"/>
     <option name="headers">
         <list>
             <KeyValuePair>
