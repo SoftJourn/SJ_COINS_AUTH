@@ -1,6 +1,0 @@
-CREATE TABLE refresh_tokens
-(
-    id BIGINT(20) PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    expiration DATETIME NOT NULL,
-    value VARCHAR(1024) NOT NULL
-);
