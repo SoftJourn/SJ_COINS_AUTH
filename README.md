@@ -2,36 +2,65 @@
 
 ## Start up documentation
 
-### Step 1: create databases structure
+### Step 1: Create databases structure
 
 #### Enter as root user and create user for these databases using commands:
 
 ```sql
-Create User 'sj_vending'@'localhost' IDENTIFIED BY '2XenNakX1e3RLrpT';
-grant all privileges on *.* to 'sj_vending'@'localhost';
+CREATE USER 'user'@'localhost' IDENTIFIED BY 'somePassword';
+
+GRANT ALL PRIVILEGES ON *.* TO 'user'@'localhost';
 ```
 
 #### Enter as this new user and create databases:
 
 ```sql
-create database sj_auth character set utf8;
+CREATE DATABASE sj_auth CHARACTER SET utf8;
 ```
 
-#### Init databases using sql scripts which are located in db folders of each module;
+#### NOTE: All the tables will be created during the first service start.
 
-### Step 2: Add certificates to your jvm's key storage:
-
-#### Go to your jre's key tool directory(by default it is "/usr/java/latest/jre/bin/keytool") and use commands(by default to set certificate password "changeit" is used):
+### Step 2: Create keystore file, certificate and extract public key:
 
 ```bash
-sudo keytool -import -alias auth -file ~/sj_coins/auth/src/main/resources/ssl/auth.cer -keystore cacerts
-```
-#### Reboot system to use certificates
+keytool -genkey -v -keystore auth.jks -alias auth -keyalg RSA -keysize 2048 -validity 10000
 
-### Step 3: Download bower dependencies for admin page(install nodejs if you haven't installed it):
+keytool -export -keystore auth.jks -alias auth -file auth.pub
+
+openssl x509 -inform der -pubkey -noout -in auth.cer > auth.pub
+```
+
+
+### Step 3: Add sensitive properties:
 
 ```bash
-bower install
+mkdir $HOME/.auth
+touch application.properties
 ```
+
+Add this properties to the previously created file
+
+```properties
+# Datasource
+spring.datasource.url=jdbc:mysql://127.0.0.1:3306/sj_auth?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false
+spring.datasource.username=user
+spring.datasource.password=somePassword
+
+#Users
+super.admins=someUsername
+
+ldapServerURL=ldap://ldap.somehostname
+ldapRoot=dc=ldap,dc=somedc
+ldapUsersBase=ou=People,ou=Users
+
+authKeyFileName=/home/someUserName/.auth/auth.jks
+authKeyStorePass=keyStorePassword
+authKeyMasterPass=keyStorePassword
+authKeyAlias=auth
+
+# Eris
+eris.chain.url=http://someHostname:1337
+```
+
 
 ### Step 4: Run project and enter in browser [https://localhost:8111/login](https://localhost:8111/login)
