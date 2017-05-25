@@ -187,6 +187,19 @@
         </dependency>
 
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                    <version>${spring.boot.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 	
 	<build>
 		<plugins>
