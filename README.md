@@ -25,7 +25,7 @@ CREATE DATABASE sj_auth CHARACTER SET utf8;
 ```bash
 keytool -genkey -v -keystore auth.jks -alias auth -keyalg RSA -keysize 2048 -validity 10000
 
-keytool -export -keystore auth.jks -alias auth -file auth.pub
+keytool -export -keystore auth.jks -alias auth -file auth.cer
 
 openssl x509 -inform der -pubkey -noout -in auth.cer > auth.pub
 ```
@@ -62,5 +62,28 @@ authKeyAlias=auth
 eris.chain.url=http://someHostname:1337
 ```
 
+### Step 4: Add logback configuration
 
-### Step 4: Run project and enter in browser [https://localhost:8111/login](https://localhost:8111/login)
+```bash
+cd $HOME/.auth
+touch logback.xml
+```
+
+Add basic configuration to the file
+
+```xml
+<configuration debug="true" scan="true" scanPeriod="30">
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%-35(%d{dd-MM-yyyy} %magenta(%d{HH:mm:ss}) [%5.10(%thread)]) %highlight(%-5level) %cyan(%logger{16}) - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>
+```
+
+### Step 5: Run project and enter in browser [https://localhost:8111/login](https://localhost:8111/login)
