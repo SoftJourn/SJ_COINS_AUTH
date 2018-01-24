@@ -70,7 +70,7 @@ public class AuthConfiguration {
                                                                       @Value("${authKeyStorePass}") String authKeyStorePass,
                                                                       @Value("${authKeyMasterPass}") String authKeyMasterPass,
                                                                       @Value("${authKeyAlias}") String authKeyAlias) throws MalformedURLException {
-            JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+            JwtAccessTokenConverter converter = new ExtraFieldTokenEnhancer();
             KeyPair keyPair = new KeyStoreKeyFactory(
                     new UrlResource("file:" + authKeyFileName), authKeyStorePass.toCharArray())
                     .getKeyPair(authKeyAlias, authKeyMasterPass.toCharArray());
