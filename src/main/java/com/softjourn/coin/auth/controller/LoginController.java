@@ -20,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 @Controller
@@ -67,13 +68,9 @@ public class LoginController {
 
         authorizationRequest.setClientId(BIOMETRIC_AUTH_CLIENT_ID);
         authorizationRequest.setApproved(true);
-        authorizationRequest.setAuthorities(user.getAuthorities()
-                .stream()
-                .map(i -> new SimpleGrantedAuthority(i.getAuthority()))
-                .collect(Collectors.toSet()));
 
         final User userPrincipal =
-                new User(user.getLdapId(), "", true, true, true, true, authorizationRequest.getAuthorities());
+                new User(user.getLdapId(), "", true, true, true, true, Collections.emptySet());
 
         final UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(userPrincipal, null, authorizationRequest.getAuthorities());
