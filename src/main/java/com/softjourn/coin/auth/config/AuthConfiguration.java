@@ -142,11 +142,16 @@ public class AuthConfiguration {
     @Configuration
     @EnableResourceServer
     public static class OAuthResourceServer extends ResourceServerConfigurerAdapter {
+
+        @Value("${biometric.auth.access}")
+        private String BIOMETRIC_SERVICE_ACCESS;
+
         @Override
         public void configure(HttpSecurity http) throws Exception {
             http
                     .authorizeRequests()
                     .antMatchers("/login").permitAll()
+                    .antMatchers("/login/passwordless/**").access(BIOMETRIC_SERVICE_ACCESS)
                     .antMatchers("/v1/admin/**").hasAnyRole("SUPER_ADMIN", "USER_MANAGER")
                     .antMatchers("/v1/users/**").authenticated()
                     .antMatchers("/oauth/token/revoke").authenticated()
