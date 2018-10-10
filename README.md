@@ -60,6 +60,11 @@ authKeyAlias=auth
 
 # Eris
 eris.chain.url=http://someHostname:1337
+
+# Biometric Auth
+biometric.auth.client_id=biometric_app
+# Access SpEL - e.g. "permitAll()", "hasIpAddress('X.X.X.X')"
+biometric.auth.access=hasIpAddress('127.0.0.1')
 ```
 
 ### Step 4: Add logback configuration
