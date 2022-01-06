@@ -28,8 +28,8 @@ public class RevocableJwtTokenStore implements TokenStore {
 
   private static final int DEFAULT_CLEAN_UP_INTERVAL = 100;
 
-  private final TokenRepository repository;
   private final JwtTokenStore plainStore;
+  private final TokenRepository repository;
   private final AtomicInteger counter = new AtomicInteger(0);
 
   @Autowired

@@ -1,13 +1,13 @@
 package com.softjourn.coin.auth.service;
 
 import com.softjourn.coin.auth.entity.User;
-
 import java.util.List;
 
 public interface ILdapService {
-    List<User> getAllUsers();
 
-    boolean userExist(User user);
+  List<User> getAllUsers();
 
-    User getUser(String ldapId);
+  boolean userExist(User user);
+
+  User getUser(String ldapId);
 }
