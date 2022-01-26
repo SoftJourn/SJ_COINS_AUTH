@@ -3,13 +3,12 @@ package com.softjourn.coin.auth.service;
 import com.softjourn.coin.auth.entity.Role;
 import com.softjourn.coin.auth.exception.IllegalAddException;
 import com.softjourn.coin.auth.repository.RoleRepository;
+import java.util.Arrays;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
-import java.util.List;
 
 @Service
 public class RoleService {
@@ -37,7 +36,7 @@ public class RoleService {
         try {
             return roleRepository.save(new Role(roleName));
         } catch (DataIntegrityViolationException e) {
-            return roleRepository.findOne(roleName);
+            return roleRepository.findById(roleName).orElse(null);
         } catch (Exception e) {
             return null;
         }
@@ -63,7 +62,7 @@ public class RoleService {
     }
 
     public void removeRole(String roleName) {
-        Role role = roleRepository.findOne(roleName);
+        Role role = roleRepository.findById(roleName).orElse(null);
         if (role == null) {
             throw new IllegalArgumentException("Role " + roleName + " hasn't been found");
         }
@@ -73,7 +72,7 @@ public class RoleService {
     }
 
     public Role get(String roleName) {
-        return roleRepository.findOne(roleName);
+        return roleRepository.findById(roleName).orElse(null);
     }
 
     public List<Role> getAll() {

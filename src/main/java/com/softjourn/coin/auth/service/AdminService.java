@@ -2,19 +2,22 @@ package com.softjourn.coin.auth.service;
 
 import com.softjourn.coin.auth.entity.Role;
 import com.softjourn.coin.auth.entity.User;
-import com.softjourn.coin.auth.exception.*;
+import com.softjourn.coin.auth.exception.DeletingSuperUserException;
+import com.softjourn.coin.auth.exception.DuplicateEntryException;
+import com.softjourn.coin.auth.exception.LDAPNotFoundException;
+import com.softjourn.coin.auth.exception.NoSuchUserException;
+import com.softjourn.coin.auth.exception.NotValidRoleException;
 import com.softjourn.coin.auth.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Service;
-
-import javax.naming.ConfigurationException;
-import javax.persistence.EntityNotFoundException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.naming.ConfigurationException;
+import javax.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.stereotype.Service;
 
 // RoleService should be created before AdminService as this service using roles.
 @DependsOn("roleService")
@@ -47,7 +50,7 @@ public class AdminService {
 
     private void removeSuperUsers(String[] superRoles) throws ConfigurationException {
         if (superRoles != null && superRoles.length > 0) {
-            userRepository.delete(this.getSuperAdmins(superRoles[0]));
+            userRepository.deleteAll(this.getSuperAdmins(superRoles[0]));
         } else {
             throw new ConfigurationException("Please set up proper super.roles");
         }
@@ -75,7 +78,7 @@ public class AdminService {
     }
 
     boolean isAdmin(String ldapId) {
-        return userRepository.exists(ldapId);
+        return userRepository.findById(ldapId).isPresent();
     }
 
     public List<User> getAdmins() {
@@ -83,7 +86,7 @@ public class AdminService {
     }
 
     public User find(String ldapId) {
-        return userRepository.findOne(ldapId);
+        return userRepository.findById(ldapId).orElse(null);
     }
 
     /**
@@ -156,8 +159,8 @@ public class AdminService {
 
         if (isAdmin(ldapName)) {
             if (isSuper(ldapName))
-                throw new DeletingSuperUserException(userRepository.findOne(ldapName));
-            userRepository.delete(ldapName);
+                throw new DeletingSuperUserException(userRepository.findById(ldapName).orElseThrow(null));
+            userRepository.deleteById(ldapName);
         } else {
             throw new NoSuchUserException(ldapName);
         }
@@ -165,7 +168,7 @@ public class AdminService {
 
     private boolean isSuper(String ldapName) {
         try {
-            return this.isSuper(userRepository.findOne(ldapName));
+            return this.isSuper(userRepository.findById(ldapName).orElse(null));
         } catch (Exception e) {
             return false;
         }
