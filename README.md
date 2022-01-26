@@ -6,6 +6,16 @@
 SJ_COINS_AUTH_SERVER_PORT=8081
 SJ_COINS_AUTH_SERVER_LOGGING_CONFIG=file:/Users/vlad/Job/.config/auth/logback.xml
 SJ_COINS_AUTH_SERVER_ERIS_CHAIN_URL=http://localhost:1337
+SJ_COINS_AUTH_SERVER_DATASOURCE_URL=jdbc:mysql://localhost:3306/sj_auth?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false
+SJ_COINS_AUTH_SERVER_DATASOURCE_USER=sj
+SJ_COINS_AUTH_SERVER_DATASOURCE_PASS=password
+SJ_COINS_AUTH_SERVER_ADMINS=vzaichuk
+SJ_COINS_AUTH_SERVER_LDAP_URL=ldaps://ldap.softjourn.if.ua
+SJ_COINS_AUTH_SERVER_LDAP_ROOT=dc=ldap,dc=sjua
+SJ_COINS_AUTH_SERVER_LDAP_BASE=ou=People,ou=Users
+SJ_COINS_AUTH_SERVER_AUTH_KEY_FILE=/Users/vlad/Job/.config/auth/auth.jks
+SJ_COINS_AUTH_SERVER_AUTH_STORE_PASS=password
+SJ_COINS_AUTH_SERVER_AUTH_MASTER_PASS=password
 ```
 Or with export:
 ```
