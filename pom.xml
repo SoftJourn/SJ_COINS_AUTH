@@ -20,12 +20,11 @@
   <properties>
     <com.h2database.h2.version>2.1.210</com.h2database.h2.version>
     <com.softjourn.common.version>0.4.4</com.softjourn.common.version>
-    <jakarta.validation.jakarta.validation-api.version>3.0.1</jakarta.validation.jakarta.validation-api.version>
     <java.version>11</java.version>
     <junit.junit.version>4.13.2</junit.junit.version>
     <mysql.mysql-connector-java.version>8.0.28</mysql.mysql-connector-java.version>
     <org.flywaydb.flyway-core.version>5.2.4</org.flywaydb.flyway-core.version>
-    <org.hibernate.hibernate-validator.version>7.0.2.Final</org.hibernate.hibernate-validator.version>
+    <org.hibernate.validator.hibernate-validator.version>7.0.2.Final</org.hibernate.validator.hibernate-validator.version>
     <org.hibernate.version>5.6.4.Final</org.hibernate.version>
     <org.mockito.mockito-all.version>1.10.19</org.mockito.mockito-all.version>
     <org.projectlombok.lombok.version>1.18.22</org.projectlombok.lombok.version>
@@ -49,12 +48,6 @@
         <groupId>com.softjourn</groupId>
         <artifactId>common</artifactId>
         <version>${com.softjourn.common.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>jakarta.validation</groupId>
-        <artifactId>jakarta.validation-api</artifactId>
-        <version>${jakarta.validation.jakarta.validation-api.version}</version>
       </dependency>
 
       <dependency>
@@ -88,9 +81,9 @@
       </dependency>
 
       <dependency>
-        <groupId>org.hibernate</groupId>
+        <groupId>org.hibernate.validator</groupId>
         <artifactId>hibernate-validator</artifactId>
-        <version>${org.hibernate.hibernate-validator.version}</version>
+        <version>${org.hibernate.validator.hibernate-validator.version}</version>
       </dependency>
 
       <dependency>
@@ -198,11 +191,6 @@
     </dependency>
 
     <dependency>
-      <groupId>jakarta.validation</groupId>
-      <artifactId>jakarta.validation-api</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
@@ -229,7 +217,7 @@
     </dependency>
 
     <dependency>
-      <groupId>org.hibernate</groupId>
+      <groupId>org.hibernate.validator</groupId>
       <artifactId>hibernate-validator</artifactId>
     </dependency>
 
@@ -278,7 +266,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-tomcat</artifactId>
-      <scope>provided</scope>
+      <!-- <scope>provided</scope> -->
     </dependency>
 
     <dependency>

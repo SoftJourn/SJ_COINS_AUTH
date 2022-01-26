@@ -35,7 +35,6 @@ public class LdapConfiguration {
       @Value("${ldapUsersBase}") String ldapUsersBase,
       DefaultSpringSecurityContextSource contextSource
   ) {
-
     BindAuthenticator authenticator = new BindAuthenticator(contextSource);
     authenticator.setUserSearch(
         new FilterBasedLdapUserSearch(ldapUsersBase, "(uid={0})", contextSource));
