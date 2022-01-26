@@ -23,13 +23,12 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @Import({LdapConfiguration.class})
 @SpringBootApplication
 @PropertySources({
-        @PropertySource(value = "file:${user.home}/.auth/application.properties", ignoreResourceNotFound = true)
+    @PropertySource(
+        value = "file:${user.home}/.auth/application.properties", ignoreResourceNotFound = true)
 })
-public class Auth  extends SpringBootServletInitializer {
+public class Auth extends SpringBootServletInitializer {
 
-    public static void main(String[] args) {
-        SpringApplication.run(Auth.class, args);
-    }
-
-
+  public static void main(String[] args) {
+    SpringApplication.run(Auth.class, args);
+  }
 }

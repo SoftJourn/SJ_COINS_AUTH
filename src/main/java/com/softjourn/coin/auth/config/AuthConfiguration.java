@@ -1,6 +1,9 @@
 package com.softjourn.coin.auth.config;
 
-
+import java.net.MalformedURLException;
+import java.security.KeyPair;
+import javax.sql.DataSource;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,141 +32,124 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
-import javax.sql.DataSource;
-import java.net.MalformedURLException;
-import java.security.KeyPair;
-
 @Configuration
 public class AuthConfiguration {
 
-    @Configuration
-    @EnableAuthorizationServer
-    public static class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
+  @Configuration
+  @EnableAuthorizationServer
+  @RequiredArgsConstructor
+  public static class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
-        private final AuthenticationProvider authenticationProvider;
+    private final AuthenticationProvider authenticationProvider;
+    private final TokenStore tokenStore;
+    private final DataSource dataSource;
+    private final UserDetailsService userDetailsService;
+    private final JwtAccessTokenConverter jwtAccessTokenConverter;
+    private final ClientDetailsService clientDetailsService;
 
-        private final TokenStore tokenStore;
-
-        private final DataSource dataSource;
-
-        private final UserDetailsService userDetailsService;
-
-        private final JwtAccessTokenConverter jwtAccessTokenConverter;
-
-        private final ClientDetailsService clientDetailsService;
-
-        @Autowired
-        public AuthServerConfig(UserDetailsService userDetailsService
-                , @SuppressWarnings("SpringJavaAutowiringInspection") DataSource dataSource
-                , ClientDetailsService clientDetailsService, JwtAccessTokenConverter jwtAccessTokenConverter
-                , AuthenticationProvider authenticationProvider, TokenStore tokenStore) {
-            this.userDetailsService = userDetailsService;
-            this.dataSource = dataSource;
-            this.clientDetailsService = clientDetailsService;
-            this.jwtAccessTokenConverter = jwtAccessTokenConverter;
-            this.authenticationProvider = authenticationProvider;
-            this.tokenStore = tokenStore;
-        }
-
-        @Bean
-        public static JwtAccessTokenConverter jwtAccessTokenConverter(@Value("${authKeyFileName}") String authKeyFileName,
-                                                                      @Value("${authKeyStorePass}") String authKeyStorePass,
-                                                                      @Value("${authKeyMasterPass}") String authKeyMasterPass,
-                                                                      @Value("${authKeyAlias}") String authKeyAlias) throws MalformedURLException {
-            JwtAccessTokenConverter converter = new ExtraFieldTokenEnhancer();
-            KeyPair keyPair = new KeyStoreKeyFactory(
-                    new UrlResource("file:" + authKeyFileName), authKeyStorePass.toCharArray())
-                    .getKeyPair(authKeyAlias, authKeyMasterPass.toCharArray());
-            converter.setKeyPair(keyPair);
-            return converter;
-        }
-
-        public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-
-        }
-
-        public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-            clients
-                    .jdbc(dataSource)
-                    .passwordEncoder(new BCryptPasswordEncoder());
-        }
-
-        public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-            endpoints
-                    .authenticationManager(authenticationProvider::authenticate)
-                    .tokenStore(tokenStore)
-                    .tokenServices(defaultTokenServices(jwtAccessTokenConverter))
-                    .accessTokenConverter(jwtAccessTokenConverter)
-                    .userDetailsService(userDetailsService);
-
-        }
-
-        @Bean
-        @Primary
-        @Qualifier(value = "consumerTokenServices")
-        public DefaultTokenServices defaultTokenServices(JwtAccessTokenConverter jwtAccessTokenConverter) {
-            DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
-            defaultTokenServices.setTokenEnhancer(jwtAccessTokenConverter);
-            defaultTokenServices.setTokenStore(tokenStore);
-            defaultTokenServices.setReuseRefreshToken(false);
-            defaultTokenServices.setSupportRefreshToken(true);
-            defaultTokenServices.setClientDetailsService(clientDetailsService);
-            return defaultTokenServices;
-        }
+    @Bean
+    public static JwtAccessTokenConverter jwtAccessTokenConverter(
+        @Value("${authKeyFileName}") String authKeyFileName,
+        @Value("${authKeyStorePass}") String authKeyStorePass,
+        @Value("${authKeyMasterPass}") String authKeyMasterPass,
+        @Value("${authKeyAlias}") String authKeyAlias
+    ) throws MalformedURLException {
+      JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+      KeyPair keyPair = new KeyStoreKeyFactory(
+          new UrlResource("file:" + authKeyFileName), authKeyStorePass.toCharArray())
+          .getKeyPair(authKeyAlias, authKeyMasterPass.toCharArray());
+      converter.setKeyPair(keyPair);
+      return converter;
     }
 
-    @Configuration
-    @EnableWebSecurity
-    public static class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-        @Override
-        public void configure(WebSecurity web) throws Exception {
-            web
-                    .ignoring()
-                    .antMatchers("/styles/**")
-                    .antMatchers("/elements/**")
-                    .antMatchers("/images/**")
-                    .antMatchers("/bower_components/**")
-                    .antMatchers("/fonts/**")
-                    .antMatchers("/scripts/**");
-        }
-
-        @Override
-        public void configure(HttpSecurity http) throws Exception {
-            http.csrf().ignoringAntMatchers("/oauth/token/revoke");
-        }
-
-        @Autowired
-        void configureGlobal(AuthenticationManagerBuilder auth, AuthenticationProvider provider) throws Exception {
-            auth.authenticationProvider(provider);
-        }
+    @Override
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
+      endpoints
+          .authenticationManager(authenticationProvider::authenticate)
+          .tokenStore(tokenStore)
+          .tokenServices(defaultTokenServices(jwtAccessTokenConverter))
+          .accessTokenConverter(jwtAccessTokenConverter)
+          .userDetailsService(userDetailsService);
     }
 
-    @Configuration
-    @EnableResourceServer
-    public static class OAuthResourceServer extends ResourceServerConfigurerAdapter {
-
-        @Value("${biometric.auth.access}")
-        private String BIOMETRIC_SERVICE_ACCESS;
-
-        @Override
-        public void configure(HttpSecurity http) throws Exception {
-            http
-                    .authorizeRequests()
-                    .antMatchers("/login").permitAll()
-                    .antMatchers("/login/passwordless/**").access(BIOMETRIC_SERVICE_ACCESS)
-                    .antMatchers("/v1/admin/**").hasAnyRole("SUPER_ADMIN", "USER_MANAGER")
-                    .antMatchers("/v1/users/**").authenticated()
-                    .antMatchers("/oauth/token/revoke").authenticated()
-                    .anyRequest().authenticated()
-
-                    .and()
-                    .formLogin()
-                    .loginPage("/login")
-                    .defaultSuccessUrl("/")
-
-                    .and()
-                    .csrf().disable();
-        }
+    @Override
+    public void configure(AuthorizationServerSecurityConfigurer security) {
     }
+
+    @Override
+    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+      clients
+          .jdbc(dataSource)
+          .passwordEncoder(new BCryptPasswordEncoder());
+    }
+
+    @Bean
+    @Primary
+    @Qualifier("consumerTokenServices")
+    public DefaultTokenServices defaultTokenServices(
+        JwtAccessTokenConverter jwtAccessTokenConverter
+    ) {
+      DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
+      defaultTokenServices.setTokenEnhancer(jwtAccessTokenConverter);
+      defaultTokenServices.setTokenStore(tokenStore);
+      defaultTokenServices.setReuseRefreshToken(false);
+      defaultTokenServices.setSupportRefreshToken(true);
+      defaultTokenServices.setClientDetailsService(clientDetailsService);
+      return defaultTokenServices;
+    }
+  }
+
+  @Configuration
+  @EnableWebSecurity
+  public static class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+      web.ignoring()
+          .antMatchers("/styles/**")
+          .antMatchers("/elements/**")
+          .antMatchers("/images/**")
+          .antMatchers("/bower_components/**")
+          .antMatchers("/fonts/**")
+          .antMatchers("/scripts/**");
+    }
+
+    @Override
+    public void configure(HttpSecurity http) throws Exception {
+      http.csrf().ignoringAntMatchers("/oauth/token/revoke");
+    }
+
+    @Autowired
+    void configureGlobal(AuthenticationManagerBuilder auth, AuthenticationProvider provider) {
+      auth.authenticationProvider(provider);
+    }
+  }
+
+  @Configuration
+  @EnableResourceServer
+  public static class OAuthResourceServer extends ResourceServerConfigurerAdapter {
+
+    @Value("${biometric.auth.access}")
+    private String BIOMETRIC_SERVICE_ACCESS;
+
+    @Override
+    public void configure(HttpSecurity http) throws Exception {
+      http
+          .authorizeRequests()
+          .antMatchers("/login").permitAll()
+          .antMatchers("/login/passwordless/**").access(BIOMETRIC_SERVICE_ACCESS)
+          .antMatchers("/v1/admin/**").hasAnyRole("SUPER_ADMIN", "USER_MANAGER")
+          .antMatchers("/v1/users/**").authenticated()
+          .antMatchers("/oauth/token/revoke").authenticated()
+          .anyRequest().authenticated()
+
+          .and()
+          .formLogin()
+          .loginPage("/login")
+          .defaultSuccessUrl("/")
+
+          .and()
+          .csrf().disable();
+    }
+  }
 }

@@ -3,8 +3,8 @@
 ## Prepare stage
 #### Setup environment variables.
 ```
-SJ_COINS_AUTH_SERVER_PORT=8111
-SJ_COINS_AUTH_SERVER_LOGGING_CONFIG=file:${HOME}/Job/.config/auth/logback.xml
+SJ_COINS_AUTH_SERVER_PORT=8081
+SJ_COINS_AUTH_SERVER_LOGGING_CONFIG=file:/Users/vlad/Job/.config/auth/logback.xml
 SJ_COINS_AUTH_SERVER_ERIS_CHAIN_URL=http://localhost:1337
 ```
 Or with export:
