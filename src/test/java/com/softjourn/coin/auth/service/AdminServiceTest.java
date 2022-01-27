@@ -1,9 +1,25 @@
 package com.softjourn.coin.auth.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
+
+import com.softjourn.coin.auth.config.ApplicationProperties;
 import com.softjourn.coin.auth.entity.Role;
 import com.softjourn.coin.auth.entity.User;
-import com.softjourn.coin.auth.exception.*;
+import com.softjourn.coin.auth.exception.DeletingSuperUserException;
+import com.softjourn.coin.auth.exception.DuplicateEntryException;
+import com.softjourn.coin.auth.exception.LDAPNotFoundException;
+import com.softjourn.coin.auth.exception.NoSuchUserException;
+import com.softjourn.coin.auth.exception.NotValidRoleException;
 import com.softjourn.coin.auth.repository.UserRepository;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import javax.naming.ConfigurationException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,14 +31,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import javax.naming.ConfigurationException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -53,6 +61,9 @@ public class AdminServiceTest {
     private RoleService roleService;
     private AdminService adminService;
 
+    @Autowired
+    private ApplicationProperties applicationProperties;
+
     @Value("${super.admins}")
     private String[] superUsers;
     private User testSuperUser;
@@ -61,7 +72,7 @@ public class AdminServiceTest {
     @Before
     public void init() throws ConfigurationException {
         //Injected Mock set up
-        adminService = new AdminService(userRepository, ldapService, superUsers, superRoles);
+        adminService = new AdminService(userRepository, ldapService, applicationProperties);
     }
 
     @Before

@@ -6,7 +6,6 @@ import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -46,18 +45,17 @@ public class AuthConfiguration {
     private final UserDetailsService userDetailsService;
     private final JwtAccessTokenConverter jwtAccessTokenConverter;
     private final ClientDetailsService clientDetailsService;
+    private final ApplicationProperties applicationProperties;
 
     @Bean
-    public static JwtAccessTokenConverter jwtAccessTokenConverter(
-        @Value("${authKeyFileName}") String authKeyFileName,
-        @Value("${authKeyStorePass}") String authKeyStorePass,
-        @Value("${authKeyMasterPass}") String authKeyMasterPass,
-        @Value("${authKeyAlias}") String authKeyAlias
-    ) throws MalformedURLException {
+    public JwtAccessTokenConverter jwtAccessTokenConverter() throws MalformedURLException {
       JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
       KeyPair keyPair = new KeyStoreKeyFactory(
-          new UrlResource("file:" + authKeyFileName), authKeyStorePass.toCharArray())
-          .getKeyPair(authKeyAlias, authKeyMasterPass.toCharArray());
+          new UrlResource("file:" + applicationProperties.getAuth().getKeyFileName()),
+          applicationProperties.getAuth().getKeyStorePass().toCharArray())
+          .getKeyPair(
+              applicationProperties.getAuth().getKeyAlias(),
+              applicationProperties.getAuth().getKeyMasterPass().toCharArray());
       converter.setKeyPair(keyPair);
       return converter;
     }
@@ -127,17 +125,18 @@ public class AuthConfiguration {
 
   @Configuration
   @EnableResourceServer
+  @RequiredArgsConstructor
   public static class OAuthResourceServer extends ResourceServerConfigurerAdapter {
 
-    @Value("${biometric.auth.access}")
-    private String BIOMETRIC_SERVICE_ACCESS;
+    private final ApplicationProperties applicationProperties;
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
       http
           .authorizeRequests()
           .antMatchers("/login").permitAll()
-          .antMatchers("/login/passwordless/**").access(BIOMETRIC_SERVICE_ACCESS)
+          .antMatchers("/login/passwordless/**")
+              .access(applicationProperties.getAuth().getBiometric().getAccess())
           .antMatchers("/v1/admin/**").hasAnyRole("SUPER_ADMIN", "USER_MANAGER")
           .antMatchers("/v1/users/**").authenticated()
           .antMatchers("/oauth/token/revoke").authenticated()

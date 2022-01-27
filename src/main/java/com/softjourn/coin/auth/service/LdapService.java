@@ -1,12 +1,12 @@
 package com.softjourn.coin.auth.service;
 
+import com.softjourn.coin.auth.config.ApplicationProperties;
 import com.softjourn.coin.auth.entity.User;
 import com.softjourn.coin.auth.ldap.UserAttributesMapper;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.stereotype.Service;
@@ -17,14 +17,14 @@ import org.springframework.stereotype.Service;
 public class LdapService implements ILdapService {
 
   private final LdapTemplate ldapTemplate;
-
-  @Value("${ldapUsersBase}")
-  private String ldapUsersBase;
+  private final ApplicationProperties applicationProperties;
 
   @Override
   public List<User> getAllUsers() {
-    List<User> result = ldapTemplate
-        .search(ldapUsersBase, "(&(mail=*)(objectClass=person))", new UserAttributesMapper());
+    List<User> result = ldapTemplate.search(
+        applicationProperties.getLdap().getUsersBase(),
+        "(&(mail=*)(objectClass=person))",
+        new UserAttributesMapper());
     result.sort(Comparator.comparing(User::getFullName));
     return result;
   }
@@ -42,8 +42,10 @@ public class LdapService implements ILdapService {
 
   @Override
   public User getUser(String ldapId) {
-    List<User> result = ldapTemplate
-        .search(ldapUsersBase, "(uid=" + ldapId + ")", new UserAttributesMapper());
+    List<User> result = ldapTemplate.search(
+        applicationProperties.getLdap().getUsersBase(),
+        "(uid=" + ldapId + ")",
+        new UserAttributesMapper());
     return result.stream().findFirst().orElse(null);
   }
 }

@@ -4,8 +4,8 @@ import com.softjourn.coin.auth.entity.User;
 import com.softjourn.coin.auth.ldap.LdapAuthoritiesPopulationBean;
 import com.softjourn.coin.auth.service.ILdapService;
 import java.util.Collections;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -20,24 +20,24 @@ import org.springframework.security.ldap.authentication.LdapAuthenticator;
 import org.springframework.security.ldap.search.FilterBasedLdapUserSearch;
 
 @Configuration
+@RequiredArgsConstructor
 public class LdapConfiguration {
 
+  private final ApplicationProperties applicationProperties;
+
   @Bean
-  public DefaultSpringSecurityContextSource contextSource(
-      @Value("${ldapServerURL}") String ldapURL, @Value("${ldapRoot}") String ldapRoot
-  ) {
-    return new DefaultSpringSecurityContextSource(Collections.singletonList(ldapURL), ldapRoot);
+  public DefaultSpringSecurityContextSource contextSource() {
+    return new DefaultSpringSecurityContextSource(Collections.singletonList(
+        applicationProperties.getLdap().getServerUrl()),
+        applicationProperties.getLdap().getRoot());
   }
 
   @Bean
   @Autowired
-  public BindAuthenticator ldapAuthenticator(
-      @Value("${ldapUsersBase}") String ldapUsersBase,
-      DefaultSpringSecurityContextSource contextSource
-  ) {
+  public BindAuthenticator ldapAuthenticator(DefaultSpringSecurityContextSource contextSource) {
     BindAuthenticator authenticator = new BindAuthenticator(contextSource);
-    authenticator.setUserSearch(
-        new FilterBasedLdapUserSearch(ldapUsersBase, "(uid={0})", contextSource));
+    authenticator.setUserSearch(new FilterBasedLdapUserSearch(
+        applicationProperties.getLdap().getUsersBase(), "(uid={0})", contextSource));
 
     return authenticator;
   }

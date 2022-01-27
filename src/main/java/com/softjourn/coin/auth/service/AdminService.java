@@ -1,5 +1,6 @@
 package com.softjourn.coin.auth.service;
 
+import com.softjourn.coin.auth.config.ApplicationProperties;
 import com.softjourn.coin.auth.entity.Role;
 import com.softjourn.coin.auth.entity.User;
 import com.softjourn.coin.auth.exception.DeletingSuperUserException;
@@ -16,7 +17,6 @@ import java.util.Set;
 import javax.naming.ConfigurationException;
 import javax.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
@@ -29,13 +29,17 @@ public class AdminService {
   private final ILdapService ldapService;
 
   @Autowired
-  public AdminService(UserRepository userRepository, ILdapService ldapService,
-      @Value("${super.admins}") String[] superAdmins,
-      @Value("${super.roles}") String[] superRoles) throws ConfigurationException {
+  public AdminService(
+      UserRepository userRepository,
+      ILdapService ldapService,
+      ApplicationProperties applicationProperties
+  ) throws ConfigurationException {
     this.userRepository = userRepository;
     this.ldapService = ldapService;
-    this.removeSuperUsers(superRoles);
-    this.init(superAdmins, superRoles);
+    this.removeSuperUsers(applicationProperties.getRole().getSuperRoles());
+    this.init(
+        applicationProperties.getRole().getAdmins(),
+        applicationProperties.getRole().getSuperRoles());
   }
 
   private void init(String[] superAdmins, String[] superRoles) throws ConfigurationException {

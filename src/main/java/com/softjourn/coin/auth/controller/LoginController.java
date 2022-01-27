@@ -1,11 +1,11 @@
 package com.softjourn.coin.auth.controller;
 
+import com.softjourn.coin.auth.config.ApplicationProperties;
 import com.softjourn.coin.auth.exception.LDAPNotFoundException;
 import com.softjourn.coin.auth.service.ILdapService;
 import java.util.Collections;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -31,12 +31,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @RequiredArgsConstructor
 public class LoginController {
 
-  @Value("${biometric.auth.client_id}")
-  private String BIOMETRIC_AUTH_CLIENT_ID;
-
   private final ILdapService ldapService;
   private final AuthorizationServerTokenServices tokenStore;
   private final ClientDetailsService clientDetailsService;
+  private final ApplicationProperties applicationProperties;
 
   @GetMapping("/login")
   public String login(Model model, @RequestParam(required = false) String error) {
@@ -51,7 +49,8 @@ public class LoginController {
       @RequestHeader("X-CLIENT-SECRET") String clientSecret,
       @PathVariable("ldapId") String ldapId
   ) {
-    ClientDetails details = clientDetailsService.loadClientByClientId(BIOMETRIC_AUTH_CLIENT_ID);
+    ClientDetails details = clientDetailsService
+        .loadClientByClientId(applicationProperties.getAuth().getBiometric().getClientId());
 
     if (!clientSecret.equals(details.getClientSecret())) {
       throw new AccessDeniedException(null);
@@ -65,7 +64,7 @@ public class LoginController {
 
     final AuthorizationRequest authorizationRequest = new AuthorizationRequest();
 
-    authorizationRequest.setClientId(BIOMETRIC_AUTH_CLIENT_ID);
+    authorizationRequest.setClientId(applicationProperties.getAuth().getBiometric().getClientId());
     authorizationRequest.setApproved(true);
 
     final User userPrincipal =

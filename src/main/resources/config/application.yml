@@ -1,0 +1,51 @@
+server:
+  port: ${SJ_COINS_AUTH_SERVER_PORT}
+
+spring:
+  profiles:
+    active: dev
+  datasource:
+    url: ${SJ_COINS_AUTH_SERVER_DATASOURCE_URL}
+    username: ${SJ_COINS_AUTH_SERVER_DATASOURCE_USER}
+    password: ${SJ_COINS_AUTH_SERVER_DATASOURCE_PASS}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    tomcat:
+      test-while-idle: true
+      time-between-eviction-runs-millis: 3600000
+      validation-query: "SELECT 1"
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+  flyway:
+    baseline-on-migrate: true
+    ignore-future-migration: true
+    ignore-missing-migration: true
+
+logging:
+  config: ${SJ_COINS_AUTH_SERVER_LOGGING_CONFIG}
+
+# Eris
+eris:
+  chain:
+    url: ${SJ_COINS_AUTH_SERVER_ERIS_CHAIN_URL}
+
+# Application specific properties.
+application:
+  auth:
+    key-file-name: ${SJ_COINS_AUTH_SERVER_AUTH_KEY_FILE}
+    key-store-pass: ${SJ_COINS_AUTH_SERVER_AUTH_STORE_PASS}
+    key-master-pass: ${SJ_COINS_AUTH_SERVER_AUTH_MASTER_PASS}
+    key-alias: auth
+    biometric:
+      client-id: biometric_app
+      access: permitAll() # Access SpEL - e.g. "permitAll()", "hasIpAddress('X.X.X.X')"
+  ldap:
+    server-url: ${SJ_COINS_AUTH_SERVER_LDAP_URL}
+    root: ${SJ_COINS_AUTH_SERVER_LDAP_ROOT}
+    users-base: ${SJ_COINS_AUTH_SERVER_LDAP_BASE}
+  role:
+    regular-roles: ROLE_BILLING,ROLE_INVENTORY,ROLE_USER_MANAGER
+    super-roles: ROLE_SUPER_ADMIN
+    admins: ${SJ_COINS_AUTH_SERVER_ADMINS}

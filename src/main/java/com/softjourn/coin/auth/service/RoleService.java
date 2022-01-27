@@ -1,12 +1,12 @@
 package com.softjourn.coin.auth.service;
 
+import com.softjourn.coin.auth.config.ApplicationProperties;
 import com.softjourn.coin.auth.entity.Role;
 import com.softjourn.coin.auth.exception.IllegalAddException;
 import com.softjourn.coin.auth.repository.RoleRepository;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -16,13 +16,10 @@ public class RoleService {
   private final RoleRepository roleRepository;
 
   @Autowired
-  public RoleService(
-      RoleRepository roleRepository,
-      @Value("${super.roles}") String[] superRoles, @Value("${common.roles}") String[] commonRoles
-  ) {
+  public RoleService(RoleRepository roleRepository, ApplicationProperties applicationProperties) {
     this.roleRepository = roleRepository;
-    this.initSuperRoles(superRoles);
-    this.initCommonRoles(commonRoles);
+    this.initSuperRoles(applicationProperties.getRole().getSuperRoles());
+    this.initCommonRoles(applicationProperties.getRole().getRegularRoles());
   }
 
   private void initCommonRoles(String[] commonRoles) {
