@@ -1,15 +1,12 @@
 package com.softjourn.coin.auth;
 
-
 import com.softjourn.coin.auth.config.LdapConfiguration;
 import com.softjourn.common.spring.aspects.logging.EnableLoggingAspect;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
@@ -26,13 +23,12 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @Import({LdapConfiguration.class})
 @SpringBootApplication
 @PropertySources({
-        @PropertySource(value = "file:${user.home}/.auth/application.properties", ignoreResourceNotFound = true)
+    @PropertySource(
+        value = "file:${user.home}/.auth/application.properties", ignoreResourceNotFound = true)
 })
-public class Auth  extends SpringBootServletInitializer {
+public class Auth extends SpringBootServletInitializer {
 
-    public static void main(String[] args) {
-        SpringApplication.run(Auth.class, args);
-    }
-
-
+  public static void main(String[] args) {
+    SpringApplication.run(Auth.class, args);
+  }
 }

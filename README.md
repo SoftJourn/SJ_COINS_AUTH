@@ -1,5 +1,39 @@
 # SJ Coin Auth
 
+## Prepare stage
+#### Setup environment variables.
+```
+SJ_COINS_AUTH_SERVER_PORT=8081
+SJ_COINS_AUTH_SERVER_LOGGING_CONFIG=file:/path/to/logback.xml
+SJ_COINS_AUTH_SERVER_ERIS_CHAIN_URL=http://localhost:1337
+SJ_COINS_AUTH_SERVER_DATASOURCE_URL=jdbc:mysql://localhost:3306/sj_auth?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false
+SJ_COINS_AUTH_SERVER_DATASOURCE_USER=sj
+SJ_COINS_AUTH_SERVER_DATASOURCE_PASS=password
+SJ_COINS_AUTH_SERVER_ADMINS=username
+SJ_COINS_AUTH_SERVER_LDAP_URL=ldaps://ldap.softjourn.if.ua
+SJ_COINS_AUTH_SERVER_LDAP_ROOT=dc=ldap,dc=sjua
+SJ_COINS_AUTH_SERVER_LDAP_BASE=ou=People,ou=Users
+SJ_COINS_AUTH_SERVER_AUTH_KEY_FILE=/path/to/config/auth/auth.jks
+SJ_COINS_AUTH_SERVER_AUTH_STORE_PASS=password
+SJ_COINS_AUTH_SERVER_AUTH_MASTER_PASS=password
+```
+Or with export:
+```
+export SJ_COINS_AUTH_SERVER_PORT=8081
+export SJ_COINS_AUTH_SERVER_LOGGING_CONFIG='file:/path/to/logback.xml'
+export SJ_COINS_AUTH_SERVER_ERIS_CHAIN_URL='http://localhost:1337'
+export SJ_COINS_AUTH_SERVER_DATASOURCE_URL='jdbc:mysql://localhost:3306/sj_auth?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false'
+export SJ_COINS_AUTH_SERVER_DATASOURCE_USER='sj'
+export SJ_COINS_AUTH_SERVER_DATASOURCE_PASS='password'
+export SJ_COINS_AUTH_SERVER_ADMINS='username'
+export SJ_COINS_AUTH_SERVER_LDAP_URL='ldaps://ldap.softjourn.if.ua'
+export SJ_COINS_AUTH_SERVER_LDAP_ROOT='dc=ldap,dc=sjua'
+export SJ_COINS_AUTH_SERVER_LDAP_BASE='ou=People,ou=Users'
+export SJ_COINS_AUTH_SERVER_AUTH_KEY_FILE='/path/to/config/auth/auth.jks'
+export SJ_COINS_AUTH_SERVER_AUTH_STORE_PASS='password'
+export SJ_COINS_AUTH_SERVER_AUTH_MASTER_PASS='password'
+```
+
 ## Start up documentation
 
 ### Step 1: Create databases structure
@@ -30,48 +64,10 @@ keytool -export -keystore auth.jks -alias auth -file auth.cer
 openssl x509 -inform der -pubkey -noout -in auth.cer > auth.pub
 ```
 
-
-### Step 3: Add sensitive properties:
-
-```bash
-mkdir $HOME/.auth
-touch application.properties
-```
-
-Add this properties to the previously created file
-
-```properties
-# Datasource
-spring.datasource.url=jdbc:mysql://127.0.0.1:3306/sj_auth?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false
-spring.datasource.username=user
-spring.datasource.password=somePassword
-
-#Users
-super.admins=someUsername
-
-ldapServerURL=ldap://ldap.somehostname
-ldapRoot=dc=ldap,dc=somedc
-ldapUsersBase=ou=People,ou=Users
-
-authKeyFileName=/home/someUserName/.auth/auth.jks
-authKeyStorePass=keyStorePassword
-authKeyMasterPass=keyStorePassword
-authKeyAlias=auth
-
-# Eris
-eris.chain.url=http://someHostname:1337
-
-# Biometric Auth
-biometric.auth.client_id=biometric_app
-# Access SpEL - e.g. "permitAll()", "hasIpAddress('X.X.X.X')"
-biometric.auth.access=hasIpAddress('127.0.0.1')
-```
-
-### Step 4: Add logback configuration
+### Step 3: Add logback configuration
 
 ```bash
-cd $HOME/.auth
-touch logback.xml
+touch /path/to/logback.xml
 ```
 
 Add basic configuration to the file
@@ -91,4 +87,4 @@ Add basic configuration to the file
 </configuration>
 ```
 
-### Step 5: Run project and enter in browser [https://localhost:8111/login](https://localhost:8111/login)
+### Step 5: Run project and enter in browser [https://localhost:8081/login](https://localhost:8081/login)

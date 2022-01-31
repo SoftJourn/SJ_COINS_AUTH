@@ -1,0 +1,32 @@
+spring:
+  profiles:
+    active: jenkins
+  flyway:
+    baseline-on-migrate: true
+
+logging:
+  config: classpath:logback.xml
+
+# Eris
+eris:
+  chain:
+    url: http://localhost:1337
+
+# Application specific properties.
+application:
+  auth:
+    key-file-name: target/test-classes/auth.jks
+    key-store-pass: asdfgqwert
+    key-master-pass: zxcvbasdfg
+    key-alias: testkey
+    biometric:
+      client-id: biometric_app
+      access: hasIpAddress('127.0.0.1')
+  ldap:
+    server-url: ldap://ldap_host
+    root: dc=ldap,dc=ua
+    users-base: ou=People,ou=Users
+  role:
+    regular-roles: ROLE_BILLING,ROLE_INVENTORY,ROLE_USER_MANAGER
+    super-roles: ROLE_SUPER_ADMIN
+    admins: super_admin
