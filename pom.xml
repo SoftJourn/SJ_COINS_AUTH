@@ -396,7 +396,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
-          <finalName>auth</finalName>
+          <finalName>auth-server-${version}</finalName>
         </configuration>
       </plugin>
     </plugins>
