@@ -19,7 +19,7 @@
 
   <properties>
     <com.h2database.h2.version>2.1.210</com.h2database.h2.version>
-    <com.softjourn.common.version>0.4.4</com.softjourn.common.version>
+    <com.softjourn.common.version>0.5</com.softjourn.common.version>
     <java.version>11</java.version>
     <junit.junit.version>4.13.2</junit.junit.version>
     <mysql.mysql-connector-java.version>8.0.28</mysql.mysql-connector-java.version>
