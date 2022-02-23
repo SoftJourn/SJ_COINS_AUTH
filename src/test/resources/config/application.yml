@@ -7,11 +7,6 @@ spring:
 logging:
   config: classpath:logback.xml
 
-# Eris
-eris:
-  chain:
-    url: http://localhost:1337
-
 # Application specific properties.
 application:
   auth:

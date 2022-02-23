@@ -3,7 +3,6 @@ package com.softjourn.coin.auth.ldap;
 import com.softjourn.coin.auth.entity.Role;
 import com.softjourn.coin.auth.service.AdminService;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -11,7 +10,6 @@ import java.util.stream.Stream;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class LdapAuthoritiesPopulationBean implements LdapAuthoritiesPopulator {
 
+  private static final String ROLE_USER = "ROLE_USER";
+
   private final AdminService adminService;
 
   @Override
@@ -37,7 +37,7 @@ public class LdapAuthoritiesPopulationBean implements LdapAuthoritiesPopulator {
   public Collection<? extends GrantedAuthority> getGrantedAuthorities(
       DirContextOperations userData, String username
   ) {
-    return Stream.concat(getUserRoles(username), Stream.of("ROLE_USER"))
+    return Stream.concat(getUserRoles(username), Stream.of(ROLE_USER))
         .map(roleName -> createAuthority(roleName, userData))
         .collect(Collectors.toList());
   }
@@ -52,11 +52,11 @@ public class LdapAuthoritiesPopulationBean implements LdapAuthoritiesPopulator {
     return authority;
   }
 
-  private Stream<String> getUserRoles(String userName){
+  private Stream<String> getUserRoles(String userName) {
     return Optional.ofNullable(adminService.find(userName))
         .flatMap(u -> Optional.ofNullable(u.getAuthorities()))
         .map(Collection::stream)
-        .orElse(Collections.<Role>emptySet().stream())
+        .orElse(Stream.empty())
         .map(Role::getAuthority);
   }
 

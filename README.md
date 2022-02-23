@@ -5,7 +5,6 @@
 ```
 SJ_COINS_AUTH_SERVER_PORT=8081
 SJ_COINS_AUTH_SERVER_LOGGING_CONFIG=file:/path/to/logback.xml
-SJ_COINS_AUTH_SERVER_ERIS_CHAIN_URL=http://localhost:1337
 SJ_COINS_AUTH_SERVER_DATASOURCE_URL=jdbc:mysql://localhost:3306/sj_auth?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false
 SJ_COINS_AUTH_SERVER_DATASOURCE_USER=sj
 SJ_COINS_AUTH_SERVER_DATASOURCE_PASS=password
@@ -21,7 +20,6 @@ Or with export:
 ```
 export SJ_COINS_AUTH_SERVER_PORT=8081
 export SJ_COINS_AUTH_SERVER_LOGGING_CONFIG='file:/path/to/logback.xml'
-export SJ_COINS_AUTH_SERVER_ERIS_CHAIN_URL='http://localhost:1337'
 export SJ_COINS_AUTH_SERVER_DATASOURCE_URL='jdbc:mysql://localhost:3306/sj_auth?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false'
 export SJ_COINS_AUTH_SERVER_DATASOURCE_USER='sj'
 export SJ_COINS_AUTH_SERVER_DATASOURCE_PASS='password'

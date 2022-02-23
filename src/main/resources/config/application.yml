@@ -26,11 +26,6 @@ spring:
 logging:
   config: ${SJ_COINS_AUTH_SERVER_LOGGING_CONFIG}
 
-# Eris
-eris:
-  chain:
-    url: ${SJ_COINS_AUTH_SERVER_ERIS_CHAIN_URL}
-
 # Application specific properties.
 application:
   auth:

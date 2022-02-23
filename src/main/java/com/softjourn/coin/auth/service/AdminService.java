@@ -16,7 +16,6 @@ import java.util.Objects;
 import java.util.Set;
 import javax.naming.ConfigurationException;
 import javax.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +27,6 @@ public class AdminService {
   private final UserRepository userRepository;
   private final ILdapService ldapService;
 
-  @Autowired
   public AdminService(
       UserRepository userRepository,
       ILdapService ldapService,
@@ -54,7 +52,7 @@ public class AdminService {
 
   private void removeSuperUsers(String[] superRoles) throws ConfigurationException {
     if (Objects.nonNull(superRoles) && superRoles.length > 0) {
-      userRepository.deleteAll(this.getSuperAdmins(superRoles[0]));
+      userRepository.deleteAll(getSuperAdmins(superRoles[0]));
     } else {
       throw new ConfigurationException("Please set up proper super.roles");
     }
@@ -172,7 +170,7 @@ public class AdminService {
 
   private boolean isSuper(String ldapName) {
     try {
-      return this.isSuper(getUserById(ldapName));
+      return isSuper(getUserById(ldapName));
     } catch (Exception e) {
       return false;
     }
@@ -180,15 +178,14 @@ public class AdminService {
 
   private boolean isSuper(User user) {
     try {
-      Set<Role> authorities = user.getAuthorities();
-      return authorities.stream().filter(Role::isSuperRole).count() > 0;
+      return user.getAuthorities().stream().anyMatch(Role::isSuperRole);
     } catch (Exception e) {
       return false;
     }
   }
 
   void delete(User testUser) {
-    this.delete(testUser.getLdapId());
+    delete(testUser.getLdapId());
   }
 
   private User getUserById(String ldapId) {
