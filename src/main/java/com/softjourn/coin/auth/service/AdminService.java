@@ -189,6 +189,6 @@ public class AdminService {
   }
 
   private User getUserById(String ldapId) {
-    return userRepository.getById(ldapId);
+    return userRepository.findById(ldapId).orElse(null);
   }
 }
