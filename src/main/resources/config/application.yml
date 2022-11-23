@@ -1,5 +1,5 @@
 server:
-  port: ${SJ_COINS_AUTH_SERVER_PORT}
+  port: ${SJ_COINS_AUTH_SERVER_PORT:8081}
 
 spring:
   profiles:
