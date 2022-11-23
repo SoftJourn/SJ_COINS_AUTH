@@ -13,5 +13,6 @@ target/
 # Hibernate cfg
 /hibernate.cfg.xml
 /src/main/resources/persistance.xml
-
 application-prod.properties
+src/main/docs
+
